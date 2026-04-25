@@ -1,0 +1,203 @@
+// Future Skills Platform — data layer
+//
+// Design principle: skill content (definitions, analogies, exercises) lives in
+// the codebase as typed modules (src/content/skills/*.ts) so it is versioned,
+// reviewable and portable. This schema only stores mutable state: users,
+// progress, reflections, habits, plan items.
+//
+// Multi-tenant aware via Organization row-level scoping.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Organization {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  name      String
+  locale    String   @default("de")
+  createdAt DateTime @default(now())
+
+  users         User[]
+  teams         Team[]
+  customSkills  CustomSkill[]
+  customExercises CustomExercise[]
+}
+
+model User {
+  id             String   @id @default(cuid())
+  email          String   @unique
+  name           String?
+  locale         String   @default("de")
+  // Free-text role description + structured tags for the Job-Role Translator.
+  roleText       String?
+  roleTags       Json?    // { industry, seniority, context }
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
+
+  assessments       Assessment[]
+  planItems         PlanItem[]
+  attempts          ExerciseAttempt[]
+  reflections       Reflection[]
+  habits            Habit[]
+  roleTranslations  RoleTranslation[]
+  teamMemberships   TeamMember[]
+
+  @@index([organizationId])
+}
+
+model Team {
+  id             String   @id @default(cuid())
+  name           String
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
+
+  members        TeamMember[]
+  cohorts        Cohort[]
+}
+
+model TeamMember {
+  id     String @id @default(cuid())
+  userId String
+  teamId String
+  role   String @default("member") // member | lead | ld_admin
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  team   Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, teamId])
+}
+
+model Cohort {
+  id        String   @id @default(cuid())
+  teamId    String
+  team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  skillSlug String
+  startedAt DateTime @default(now())
+  endsAt    DateTime?
+}
+
+// ── Assessment & planning ──────────────────────────────────────
+
+model Assessment {
+  id        String   @id @default(cuid())
+  userId    String
+  skillSlug String   // foreign key into code-level skill registry
+  level     Int      // self-rated 1..5
+  scenarioScores Json? // { item_id: score }
+  takenAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, skillSlug, takenAt])
+}
+
+model PlanItem {
+  id        String   @id @default(cuid())
+  userId    String
+  skillSlug String
+  phase     String   // foundation | exploration | application | integration
+  exerciseId String?
+  scheduledFor DateTime?
+  status    String   @default("todo") // todo | in_progress | done | skipped
+  notes     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status])
+}
+
+// ── Exercise interaction ───────────────────────────────────────
+
+model ExerciseAttempt {
+  id         String   @id @default(cuid())
+  userId     String
+  skillSlug  String
+  exerciseId String
+  // Context this exercise was done in — enables "real work" artefacts.
+  artefact   Json?    // arbitrary structured response (checklist ticks, journal, etc.)
+  reflection String?
+  startedAt  DateTime @default(now())
+  completedAt DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, skillSlug, completedAt])
+}
+
+model Reflection {
+  id        String   @id @default(cuid())
+  userId    String
+  skillSlug String?  // null = cross-skill weekly reflection
+  prompt    String
+  response  String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+}
+
+model Habit {
+  id        String   @id @default(cuid())
+  userId    String
+  skillSlug String
+  name      String
+  status    String   // new | shifting | strengthened
+  trigger   String?  // "when X happens"
+  action    String?  // "I do Y"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// Job-role translations are cached: the LLM call to adapt a skill to a role
+// is expensive, so we memoize per (roleFingerprint, skillSlug, locale).
+model RoleTranslation {
+  id              String @id @default(cuid())
+  userId          String
+  skillSlug       String
+  roleFingerprint String   // hash of roleText + roleTags
+  locale          String
+  content         Json     // { meaning, scenarios[], priority }
+  createdAt       DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([roleFingerprint, skillSlug, locale])
+  @@index([userId])
+}
+
+// ── Org-provided extensions ────────────────────────────────────
+// Enterprises can add their own skills / exercises via the admin API without
+// forking the codebase. Same schema as code-level content, but org-scoped.
+
+model CustomSkill {
+  id             String @id @default(cuid())
+  organizationId String
+  slug           String
+  category       String
+  content        Json   // validated against Zod SkillSchema at write time
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, slug])
+}
+
+model CustomExercise {
+  id             String @id @default(cuid())
+  organizationId String
+  skillSlug      String
+  content        Json   // validated against Zod ExerciseSchema at write time
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, skillSlug])
+}

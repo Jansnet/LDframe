@@ -1,0 +1,38 @@
+# Single-command self-host. After `cp .env.example .env` + edit:
+#   docker compose up -d
+#   docker compose exec app npm run db:migrate
+#   docker compose exec app npm run db:seed
+#
+# The default setup is fully self-contained: Postgres + app, no external
+# dependencies. The AI coach is optional — the platform works without it.
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: fsp
+      POSTGRES_PASSWORD: fsp
+      POSTGRES_DB: fsp
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fsp -d fsp"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://fsp:fsp@db:5432/fsp
+    ports:
+      - "3000:3000"
+
+volumes:
+  db_data:

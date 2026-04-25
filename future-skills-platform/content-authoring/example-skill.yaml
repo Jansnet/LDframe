@@ -1,0 +1,66 @@
+# Fill this file out and POST it to /api/admin/custom-skills
+# to add a company-specific skill to your deployment.
+#
+# Validated against src/content/schema.ts at write time.
+
+slug: your-skill-slug
+category: foundational   # foundational | transformative | communal | digital | technological
+name:
+  de: "Dein Skill-Titel"
+  en: "Your skill title"
+stifterverbandId: null
+version: "0.1.0"
+authors: []
+
+definition:
+  de: "Ein-Satz-Definition des Skills."
+
+megatrendTags: []
+relatedSkills: []
+
+analogies:
+  - id: core-analogy
+    title: { de: "Analogie-Titel" }
+    body:  { de: "Analogie-Beschreibung (2–4 Sätze)." }
+    limits: { de: "Wo die Analogie ihre Grenzen hat." }
+
+foundation:
+  - id: intro
+    title: { de: "Einführungsmodul" }
+    kind: concept
+    readingMinutes: 5
+    body: { de: "Markdown-Text ..." }
+
+exercises:
+  - id: first-exercise
+    title: { de: "Erste Übung" }
+    phase: exploration            # exploration | application
+    format: reflection            # see TEMPLATE.md for full list
+    length: micro                 # micro | short | embedded | block | deep
+    estimatedMinutes: 3
+    scenario: { de: "Situation, in der diese Übung greift." }
+    steps:
+      - { de: "Schritt 1" }
+      - { de: "Schritt 2" }
+    tools: []
+    expected: { de: "Was sichtbar werden sollte." }
+    integrationHints:
+      - when: { de: "Wann einbauen" }
+        how:  { de: "Wie konkret einbauen" }
+    reflectionPrompts:
+      - { de: "Reflexionsfrage" }
+
+# Add at least 10 exercises, mixed across ≥ 3 lengths and ≥ 4 formats,
+# with at least one phase: application.
+
+checklists: []
+
+habits: []
+
+coach:
+  persona: { de: "Charakter des Coaches für diesen Skill." }
+  systemPrompt: { de: "System-Prompt (Markdown erlaubt)." }
+  suggestedPrompts:
+    - { de: "Prompt-Vorschlag 1" }
+    - { de: "Prompt-Vorschlag 2" }
+    - { de: "Prompt-Vorschlag 3" }

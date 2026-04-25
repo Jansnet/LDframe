@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+  html {
+    font-family: theme(fontFamily.sans);
+    color: theme(colors.on-surface.DEFAULT);
+    background-color: theme(colors.surface.DEFAULT);
+  }
+  h1, h2, h3, .serif {
+    font-family: theme(fontFamily.serif);
+  }
+  /* Material-style focus ring, warm-tinted */
+  :focus-visible {
+    outline: none;
+    box-shadow: theme(boxShadow.focus-ring);
+    border-radius: inherit;
+  }
+  ::selection {
+    background-color: theme(colors.primary.container);
+    color: theme(colors.primary.on-container);
+  }
+}
+
+@layer components {
+  /* State layer: semi-transparent overlay for hover/pressed states on interactive surfaces */
+  .state-layer {
+    position: relative;
+    isolation: isolate;
+  }
+  .state-layer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: theme(colors.on-surface.DEFAULT);
+    opacity: 0;
+    transition: opacity 120ms theme(transitionTimingFunction.emphasized);
+    pointer-events: none;
+    border-radius: inherit;
+    z-index: 0;
+  }
+  .state-layer > * {
+    position: relative;
+    z-index: 1;
+  }
+  .state-layer:hover::after { opacity: 0.06; }
+  .state-layer:active::after { opacity: 0.12; }
+}
