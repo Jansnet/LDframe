@@ -1,17 +1,14 @@
 import { Skill } from "./schema";
+import { kritischesDenken } from "./skills/kritisches-denken";
+import { resilienz } from "./skills/resilienz";
+import { aiLiteracy } from "./skills/ai-literacy";
 
 /**
- * Code-level skill registry. This is the authoritative list of built-in
- * skills. Org-specific CustomSkill rows are merged in at read time via
- * `loadSkills()` to produce the user-facing atlas.
- *
- * NOTE (current state): the three MVP skill modules
- * (kritisches-denken, resilienz, ai-literacy) are scheduled but not yet
- * authored. The exercise research is complete (see git history) — once the
- * modules land in src/content/skills/, import them here and the registry
- * validates each one against the Zod schema on module load.
+ * Code-level skill registry. Authoritative list of built-in skills.
+ * Org-specific CustomSkill rows are merged at read time to produce the
+ * user-facing atlas.
  */
-const builtin: Skill[] = [];
+const builtin: Skill[] = [kritischesDenken, resilienz, aiLiteracy];
 
 for (const skill of builtin) {
   const parsed = Skill.safeParse(skill);

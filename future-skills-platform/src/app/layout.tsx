@@ -3,8 +3,8 @@ import type { Metadata } from "next";
 import { AppShell } from "@/components/layout/AppShell";
 
 export const metadata: Metadata = {
-  title: "Future Skills Plattform",
-  description: "Trainierbare Plattform für die 30 Zukunftskompetenzen (Stifterverband 2030).",
+  title: "Skill Hacker — Future Skills trainieren",
+  description: "Skill Hacker macht die 30 Zukunftskompetenzen (Stifterverband 2030) trainierbar — über Foundation, Exploration, Application und Integration.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
