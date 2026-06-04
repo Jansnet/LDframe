@@ -1,0 +1,875 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Future Skills Plattform — Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream-50:#FBF8F3; --cream-100:#F5F0E8; --cream-200:#EDE4D3;
+    --clay-100:#E8D7C3; --clay-300:#C9A689; --clay-500:#A67A58; --clay-700:#6B4A30;
+    --rust-300:#E09A7F; --rust-500:#CC785C; --rust-600:#B8603F; --rust-700:#8F4328;
+    --slate-700:#3D3B36; --slate-800:#262521; --slate-900:#1A1917;
+    --primary:#CC785C; --primary-container:#F5E1D7; --on-primary-container:#4A1F10;
+    --surface:#FBF8F3; --surface-container:#F5F0E8; --surface-container-high:#EDE4D3;
+    --on-surface:#262521; --on-surface-muted:#6B4A30;
+    --outline:#C9A689; --outline-variant:#E0D1B4;
+    --elev-1:0 1px 2px rgba(38,37,33,.06),0 1px 3px rgba(38,37,33,.04);
+    --elev-2:0 2px 4px rgba(38,37,33,.08),0 2px 6px rgba(38,37,33,.04);
+    --elev-3:0 4px 8px rgba(38,37,33,.08),0 6px 12px rgba(38,37,33,.06);
+    --ease-emph:cubic-bezier(.2,0,0,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--surface);color:var(--on-surface);font-family:'Inter',system-ui,sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  h1,h2,h3,h4,.serif{font-family:'Source Serif 4',Georgia,serif;letter-spacing:-.01em}
+  a{color:inherit;text-decoration:none}
+  button{font:inherit;cursor:pointer;border:0;background:transparent}
+  .mono{font-family:'JetBrains Mono',ui-monospace,monospace}
+  ::selection{background:var(--primary-container);color:var(--on-primary-container)}
+
+  /* ── layout ── */
+  .topbar{position:sticky;top:0;z-index:40;background:rgba(251,248,243,.85);backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid var(--outline-variant)}
+  .topbar-inner{max-width:1120px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between}
+  .logo{font-family:'Source Serif 4',serif;font-size:22px;font-weight:500}
+  .logo .v{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--primary);margin-left:8px;vertical-align:middle}
+  nav.tabs{display:flex;gap:2px}
+  nav.tabs button{padding:0 16px;height:36px;border-radius:9999px;font-size:14px;color:var(--on-surface);transition:background .15s var(--ease-emph)}
+  nav.tabs button:hover{background:rgba(38,37,33,.06)}
+  nav.tabs button.active{background:var(--primary-container);color:var(--on-primary-container);font-weight:500}
+
+  main{max-width:1120px;margin:0 auto;padding:40px 24px 80px}
+  section{display:none}
+  section.show{display:block;animation:fadeIn .25s var(--ease-emph)}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+  /* ── typography scale ── */
+  .display-md{font-size:44px;line-height:1.15;font-weight:500}
+  .headline-md{font-size:24px;line-height:1.25;font-weight:500}
+  .title-lg{font-size:20px;line-height:1.3;font-weight:500}
+  .title-md{font-size:17px;line-height:1.35;font-weight:500}
+  .label-sm{font-size:12px;line-height:1.3;letter-spacing:.02em;text-transform:uppercase}
+  .body-md{font-size:15px;line-height:1.55}
+  .body-lg{font-size:17px;line-height:1.6}
+  .muted{color:var(--on-surface-muted)}
+
+  /* ── cards ── */
+  .card{background:var(--surface-container);border-radius:16px;padding:24px;transition:box-shadow .15s var(--ease-emph)}
+  .card.outlined{background:var(--surface);border:1px solid var(--outline-variant)}
+  .card.elevated{background:var(--surface);box-shadow:var(--elev-1)}
+  .card.elevated:hover{box-shadow:var(--elev-3)}
+  .card.interactive{cursor:pointer}
+  .grid{display:grid;gap:20px}
+  .grid-3{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+  .grid-2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+
+  /* ── chips ── */
+  .chip{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border:1px solid var(--outline-variant);background:var(--surface-container);color:var(--on-surface);border-radius:9999px;font-size:12px;font-weight:500;white-space:nowrap;letter-spacing:.01em}
+  .chip.primary{background:var(--primary-container);color:var(--on-primary-container);border-color:rgba(204,120,92,.3)}
+  .chip.clay{background:var(--clay-100);color:var(--clay-700);border-color:rgba(201,166,137,.6)}
+  .chip.rust{background:rgba(224,154,127,.2);color:var(--rust-700);border-color:rgba(224,154,127,.6)}
+  .badge{display:inline-flex;align-items:center;background:var(--slate-800);color:var(--cream-100);padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+
+  /* ── buttons ── */
+  .btn{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 24px;border-radius:9999px;font-size:14px;font-weight:500;transition:all .15s var(--ease-emph)}
+  .btn.filled{background:var(--primary);color:var(--surface)}
+  .btn.filled:hover{box-shadow:var(--elev-2)}
+  .btn.tonal{background:var(--primary-container);color:var(--on-primary-container)}
+  .btn.outlined{border:1px solid var(--outline);color:var(--on-surface)}
+  .btn.sm{height:36px;padding:0 16px;font-size:13px}
+
+  /* ── phase stepper ── */
+  .stepper{display:flex;gap:0;background:var(--surface-container);border-radius:16px;padding:8px}
+  .step{flex:1;padding:12px 16px;border-radius:8px;cursor:pointer;transition:background .15s var(--ease-emph)}
+  .step:hover{background:rgba(38,37,33,.04)}
+  .step.active{background:var(--primary-container)}
+  .step .step-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--on-surface-muted);text-transform:uppercase;letter-spacing:.04em}
+  .step.active .step-num{color:var(--on-primary-container)}
+  .step .step-label{font-family:'Source Serif 4',serif;font-size:17px;font-weight:500;margin-top:4px}
+  .step .step-bar{height:3px;border-radius:9999px;margin-top:10px;background:var(--outline-variant)}
+  .step.active .step-bar,.step.done .step-bar{background:var(--primary)}
+
+  /* ── exercise card ── */
+  .exercise-meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+  .integration-hint{display:block;padding:10px 14px;background:var(--cream-50);border-left:3px solid var(--primary);border-radius:0 8px 8px 0;margin:6px 0}
+  .integration-hint .when{font-weight:500;color:var(--on-surface)}
+  .integration-hint .how{color:var(--on-surface-muted)}
+
+  /* ── plan view ── */
+  .plan-week{padding:18px;border:1px solid var(--outline-variant);border-radius:12px;background:var(--surface)}
+  .plan-week.active{border-color:var(--primary);background:var(--primary-container)}
+  .plan-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px dashed var(--outline-variant)}
+  .plan-row:last-child{border:0}
+
+  /* ── frameworks comparison ── */
+  .fw-col{padding:24px;background:var(--surface-container);border-radius:16px;display:flex;flex-direction:column;gap:12px}
+  .fw-col h3{margin-bottom:4px}
+  .fw-col .source{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--on-surface-muted)}
+  .fw-col ul{padding-left:18px;color:var(--on-surface)}
+  .fw-col li{font-size:14px;line-height:1.5;margin:3px 0}
+  .fw-col .license{margin-top:auto;font-size:12px;background:var(--cream-50);padding:8px 12px;border-radius:8px;border:1px solid var(--outline-variant)}
+  .fw-col .license.warning{background:#FDF1E6;border-color:var(--rust-300)}
+  .fw-col .license.danger{background:#F8E0E0;border-color:#D88;color:#7a2222}
+
+  /* ── footer ── */
+  footer{border-top:1px solid var(--outline-variant);margin-top:80px;padding:32px 0;color:var(--on-surface-muted);font-size:14px}
+  footer .footer-inner{max-width:1120px;margin:0 auto;padding:0 24px;display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between}
+  footer .attribution{max-width:600px}
+
+  /* ── utilities ── */
+  .stack-sm > * + *{margin-top:8px}
+  .stack > * + *{margin-top:16px}
+  .stack-lg > * + *{margin-top:32px}
+  .flex{display:flex;gap:16px;align-items:center}
+  .flex-between{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+  .pill-row{display:flex;flex-wrap:wrap;gap:8px}
+  hr{border:0;border-top:1px solid var(--outline-variant);margin:24px 0}
+  details > summary{cursor:pointer;list-style:none;font-weight:500}
+  details > summary::-webkit-details-marker{display:none}
+  details > summary::before{content:"▸ ";color:var(--primary);transition:transform .15s var(--ease-emph);display:inline-block}
+  details[open] > summary::before{content:"▾ "}
+
+  /* ── coach quote ── */
+  .coach-quote{background:var(--primary-container);color:var(--on-primary-container);padding:24px;border-radius:16px;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
+  .coach-quote .text{flex:1;min-width:280px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="logo">Future Skills <span class="v">v0.1 — DEMO</span></div>
+    <nav class="tabs" id="nav">
+      <button data-tab="atlas" class="active">Atlas</button>
+      <button data-tab="skill">Skill</button>
+      <button data-tab="plan">Mein Plan</button>
+      <button data-tab="coach">Coach</button>
+      <button data-tab="frameworks">Frameworks</button>
+    </nav>
+  </div>
+</div>
+
+<main>
+
+<!-- ────────── ATLAS ────────── -->
+<section id="atlas" class="show">
+  <div class="stack-lg">
+    <div style="max-width:720px">
+      <h1 class="display-md serif">Zukunftskompetenzen, trainierbar gemacht.</h1>
+      <p class="body-lg muted" style="margin-top:16px">
+        Basierend auf dem Future-Skills-Framework 2030 des Stifterverbands. Jeder Skill hat
+        einen vollständigen Lernzyklus aus <strong style="color:var(--on-surface)">Foundation → Exploration → Application → Integration</strong>,
+        passt sich an deine Jobrolle an und baut Übungen in deinen Arbeitsalltag ein — statt obendrauf.
+      </p>
+    </div>
+
+    <div class="flex-between">
+      <h2 class="headline-md serif">Skill-Atlas</h2>
+      <span class="chip">3 Skills im MVP · 30 geplant</span>
+    </div>
+
+    <div class="grid grid-3">
+
+      <!-- Card 1: Kritisches Denken -->
+      <div class="card elevated interactive" onclick="show('skill')">
+        <div class="flex-between" style="margin-bottom:12px">
+          <span class="chip clay">Grundlegend</span>
+          <span class="mono label-sm muted">12 Übungen</span>
+        </div>
+        <h3 class="title-lg serif">Kritisches Denken</h3>
+        <p class="body-md muted" style="margin-top:8px">
+          Behauptungen und Annahmen mit Vernunft und Evidenz prüfen — bevor du zustimmst,
+          ablehnst oder entscheidest.
+        </p>
+        <div class="pill-row" style="margin-top:16px">
+          <span class="chip">#entscheidung</span>
+          <span class="chip">#kommunikation</span>
+        </div>
+      </div>
+
+      <!-- Card 2: Resilienz -->
+      <div class="card elevated interactive">
+        <div class="flex-between" style="margin-bottom:12px">
+          <span class="chip rust">Transformativ</span>
+          <span class="mono label-sm muted">12 Übungen</span>
+        </div>
+        <h3 class="title-lg serif">Resilienz</h3>
+        <p class="body-md muted" style="margin-top:8px">
+          Belastung erkennen, regulieren und so verarbeiten, dass Handlungsfähigkeit und
+          Wohlbefinden erhalten bleiben.
+        </p>
+        <div class="pill-row" style="margin-top:16px">
+          <span class="chip">#stress</span>
+          <span class="chip">#regeneration</span>
+        </div>
+      </div>
+
+      <!-- Card 3: AI Literacy -->
+      <div class="card elevated interactive">
+        <div class="flex-between" style="margin-bottom:12px">
+          <span class="chip primary">Digital</span>
+          <span class="mono label-sm muted">12 Übungen</span>
+        </div>
+        <h3 class="title-lg serif">AI Literacy</h3>
+        <p class="body-md muted" style="margin-top:8px">
+          KI-Tools so einsetzen, dass Output prüfbar bleibt und du jederzeit weißt, wann
+          ein Mensch im Loop sein muss.
+        </p>
+        <div class="pill-row" style="margin-top:16px">
+          <span class="chip">#ki</span>
+          <span class="chip">#prompting</span>
+          <span class="chip">#ethik</span>
+        </div>
+      </div>
+
+    </div>
+
+    <hr/>
+
+    <div class="card outlined">
+      <div class="flex-between">
+        <div>
+          <h3 class="title-lg serif">Self-Assessment starten</h3>
+          <p class="body-md muted" style="margin-top:4px">Schnell-Check pro Skill — ergibt einen 8-Wochen-Plan, der zu deiner Rolle passt.</p>
+        </div>
+        <button class="btn filled">Assessment starten</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────── SKILL DETAIL ────────── -->
+<section id="skill">
+  <div class="stack-lg">
+
+    <header class="stack" style="max-width:760px">
+      <span class="chip clay">Grundlegende Zukunftskompetenz</span>
+      <h1 class="display-md serif">Kritisches Denken</h1>
+      <p class="body-lg muted">
+        Behauptungen, Argumente und Annahmen aktiv prüfen — Evidenz, Logik und Perspektive
+        einbeziehen, statt automatisch zuzustimmen oder zu widersprechen.
+      </p>
+      <p class="mono label-sm muted">Stifterverband Future Skills 2030 · Kategorie: Grundlegend · CC BY-SA 4.0</p>
+    </header>
+
+    <div class="stepper">
+      <div class="step done">
+        <div class="step-num">01</div>
+        <div class="step-label">Foundation</div>
+        <div class="step-bar"></div>
+      </div>
+      <div class="step active">
+        <div class="step-num">02</div>
+        <div class="step-label">Exploration</div>
+        <div class="step-bar"></div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-label">Application</div>
+        <div class="step-bar"></div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-label">Integration</div>
+        <div class="step-bar"></div>
+      </div>
+    </div>
+
+    <!-- Analogies -->
+    <div>
+      <h2 class="headline-md serif" style="margin-bottom:16px">Analogien & Metaphern</h2>
+      <div class="grid grid-2">
+
+        <div class="card">
+          <h3 class="title-md serif">Filter mit verstellbarer Maschenweite</h3>
+          <p class="body-md muted" style="margin-top:8px">
+            Kritisches Denken ist wie ein Sieb, dessen Maschen du je nach Anlass enger oder
+            weiter stellst. Beim Überblick grob, beim Prüfen eines Arguments fein.
+          </p>
+          <p class="body-md" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--outline-variant);font-style:italic">
+            <strong style="font-style:normal">Wo die Analogie bricht: </strong>
+            anders als ein Sieb ist Denken nicht passiv — du formst die Maschenweite aktiv.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3 class="title-md serif">Argument als Eisberg</h3>
+          <p class="body-md muted" style="margin-top:8px">
+            Jede Aussage hat eine sichtbare Spitze (die Behauptung) und einen großen
+            unsichtbaren Teil (Annahmen, Werte, Evidenz). Kritisches Denken zieht den
+            unteren Teil ans Licht.
+          </p>
+          <p class="body-md" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--outline-variant);font-style:italic">
+            <strong style="font-style:normal">Wo die Analogie bricht: </strong>
+            ein Eisberg ist statisch — Annahmen verändern sich, sobald du sie ausgesprochen hast.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3 class="title-md serif">Steelman vs. Strawman</h3>
+          <p class="body-md muted" style="margin-top:8px">
+            Statt die schwächste Version einer Gegenposition zu kritisieren (Strawman),
+            formulierst du sie so stark wie möglich (Steelman) — erst dann argumentierst du.
+          </p>
+          <p class="body-md" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--outline-variant);font-style:italic">
+            <strong style="font-style:normal">Wo die Analogie bricht: </strong>
+            ein Steelman bleibt nicht stabil — gute Gegenargumente lassen ihn wachsen, nicht zerbrechen.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3 class="title-md serif">Second-Order-Brille</h3>
+          <p class="body-md muted" style="margin-top:8px">
+            Wie eine zweite Brille, die du nach der ersten Antwort aufsetzt: „Und dann was?"
+            Eine, zwei, drei Stufen tief — Folgen erster, zweiter, dritter Ordnung.
+          </p>
+          <p class="body-md" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--outline-variant);font-style:italic">
+            <strong style="font-style:normal">Wo die Analogie bricht: </strong>
+            mehr Stufen bedeuten nicht automatisch mehr Klarheit — irgendwann nur Spekulation.
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Foundation -->
+    <div>
+      <div class="flex-between" style="margin-bottom:16px">
+        <h2 class="headline-md serif">Foundation — Wissensbasis</h2>
+        <span class="label-sm muted">3 Module</span>
+      </div>
+      <div class="grid grid-2">
+        <div class="card outlined">
+          <div class="flex-between" style="margin-bottom:8px">
+            <span class="chip">Konzept</span>
+            <span class="mono label-sm muted">6 Min</span>
+          </div>
+          <h3 class="title-md serif">Behauptung, Grund, Evidenz</h3>
+          <p class="body-md muted" style="margin-top:8px">
+            Jede Argumentation hat drei Schichten: was behauptet wird, warum, und welche
+            Evidenz den Grund stützt. Diese drei auseinanderzuhalten ist die Basis.
+          </p>
+        </div>
+
+        <div class="card outlined">
+          <div class="flex-between" style="margin-bottom:8px">
+            <span class="chip">Modell</span>
+            <span class="mono label-sm muted">8 Min</span>
+          </div>
+          <h3 class="title-md serif">Bias-Kompass — die häufigsten Denkfallen</h3>
+          <p class="body-md muted" style="margin-top:8px">
+            Confirmation, Anchoring, Availability, Sunk Cost, Halo, Hindsight, Groupthink.
+            Ein kurzer Überblick, was sie tun und wie du sie bei dir bemerkst.
+          </p>
+        </div>
+
+        <div class="card outlined">
+          <div class="flex-between" style="margin-bottom:8px">
+            <span class="chip">Reading</span>
+            <span class="mono label-sm muted">12 Min</span>
+          </div>
+          <h3 class="title-md serif">Sokrates für den Arbeitsalltag</h3>
+          <p class="body-md muted" style="margin-top:8px">
+            Sechs Fragetypen aus der sokratischen Tradition, übersetzt in Meeting-Sprache:
+            Klärung, Prämissen, Evidenz, Perspektive, Implikationen, Meta-Frage.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Exercises -->
+    <div>
+      <div class="flex-between" style="margin-bottom:16px">
+        <h2 class="headline-md serif">Exploration & Application — Übungen</h2>
+        <span class="label-sm muted">12 Übungen · Längen gemischt</span>
+      </div>
+
+      <div class="grid grid-2">
+
+        <!-- Exercise 1: Pre-Mortem (block / workshop / application) -->
+        <div class="card outlined">
+          <div class="exercise-meta">
+            <span class="badge">workshop</span>
+            <span class="chip clay">30–60 Min</span>
+            <span class="chip">Application</span>
+          </div>
+          <h3 class="title-md serif">Pre-Mortem: „Das Projekt ist gescheitert"</h3>
+          <p class="body-md" style="margin-top:8px">
+            Versetzt euch 6 Monate in die Zukunft und nehmt an, das Projekt sei spektakulär
+            gescheitert. Jede Person notiert 3 Minuten lang alle plausiblen Gründe, dann
+            Round-Robin und Risiko-Mitigation.
+          </p>
+
+          <h4 class="label-sm" style="margin-top:16px">Schritte</h4>
+          <ol style="padding-left:20px;margin-top:6px" class="body-md">
+            <li>Stilles Brainstorming, 3 Min, jede Person für sich.</li>
+            <li>Round-Robin — jede:r teilt zwei Gründe, ohne Diskussion.</li>
+            <li>Cluster bilden, Top-5-Risiken markieren.</li>
+            <li>Pro Top-Risiko: eine konkrete Mitigation festlegen.</li>
+          </ol>
+
+          <h4 class="label-sm" style="margin-top:16px">Wann und wo integrieren</h4>
+          <div class="integration-hint">
+            <span class="when">Zum Projekt-Kickoff</span>
+            <span class="how"> — als erster Tagesordnungspunkt, bevor Aufgaben verteilt werden.</span>
+          </div>
+          <div class="integration-hint">
+            <span class="when">Vor finalem Go/No-Go</span>
+            <span class="how"> — als 30-Minuten-Block vor der Entscheidung.</span>
+          </div>
+
+          <h4 class="label-sm" style="margin-top:16px">Reflexion</h4>
+          <ul style="padding-left:20px;margin-top:6px;font-style:italic" class="body-md muted">
+            <li>Welcher der genannten Gründe hat euch alle überrascht?</li>
+          </ul>
+          <p class="label-sm muted" style="margin-top:12px">Quelle: Gary Klein, HBR 2007</p>
+        </div>
+
+        <!-- Exercise 2: 3-Min-Annahmen-Check (micro / reflection / application) -->
+        <div class="card outlined">
+          <div class="exercise-meta">
+            <span class="badge">reflection</span>
+            <span class="chip primary">1–3 Min</span>
+            <span class="chip">Application</span>
+          </div>
+          <h3 class="title-md serif">3-Minuten-Annahmen-Check vor Send</h3>
+          <p class="body-md" style="margin-top:8px">
+            Vor dem Senden einer wichtigen Mail oder vor einem Meeting drei Minuten lang zwei
+            Fragen beantworten: „Welche Annahme treffe ich, ohne sie zu prüfen?" und „Was
+            müsste wahr sein, damit meine Schlussfolgerung falsch wäre?"
+          </p>
+
+          <h4 class="label-sm" style="margin-top:16px">Wann und wo integrieren</h4>
+          <div class="integration-hint">
+            <span class="when">Vor jeder Entscheidungs-Mail</span>
+            <span class="how"> — kurz innehalten, beide Fragen beantworten, dann senden.</span>
+          </div>
+          <div class="integration-hint">
+            <span class="when">Vor Status-Update an Stakeholder</span>
+            <span class="how"> — markiere mindestens eine offene Annahme transparent.</span>
+          </div>
+          <p class="label-sm muted" style="margin-top:12px">Quelle: OpenLearn / Open University</p>
+        </div>
+
+        <!-- Exercise 3: SIFT (micro / checklist / application) -->
+        <div class="card outlined">
+          <div class="exercise-meta">
+            <span class="badge">checklist</span>
+            <span class="chip primary">1–3 Min</span>
+            <span class="chip">Application</span>
+          </div>
+          <h3 class="title-md serif">SIFT in 60 Sekunden</h3>
+          <p class="body-md" style="margin-top:8px">
+            Bei jedem geteilten Artikel oder Post vor Weitergabe vier Schritte:
+            <strong>S</strong>top, <strong>I</strong>nvestigate the source,
+            <strong>F</strong>ind better coverage, <strong>T</strong>race claims to original
+            context.
+          </p>
+
+          <h4 class="label-sm" style="margin-top:16px">Wann und wo integrieren</h4>
+          <div class="integration-hint">
+            <span class="when">Bevor du etwas im Team-Chat teilst</span>
+            <span class="how"> — kurzer Check, dann erst Forward.</span>
+          </div>
+          <div class="integration-hint">
+            <span class="when">Beim Einbauen einer Statistik in Slides</span>
+            <span class="how"> — die Quelle muss auf die Originalstudie zurückführbar sein.</span>
+          </div>
+          <p class="label-sm muted" style="margin-top:12px">Quelle: Mike Caulfield, „SIFT (The Four Moves)"</p>
+        </div>
+
+        <!-- Exercise 4: Devil's Advocate rotierend (embedded / roleplay / application) -->
+        <div class="card outlined">
+          <div class="exercise-meta">
+            <span class="badge">roleplay</span>
+            <span class="chip rust">In Aufgabe</span>
+            <span class="chip">Application</span>
+          </div>
+          <h3 class="title-md serif">Devil's Advocate rotierend im Team</h3>
+          <p class="body-md" style="margin-top:8px">
+            In wiederkehrenden Meetings übernimmt pro Sitzung eine andere Person offiziell
+            die Devil's-Advocate-Rolle: herausfordern, Annahmen freilegen, unbequeme Fragen
+            stellen. Explizit rotierend, damit es kein persönlicher Konflikt wird.
+          </p>
+
+          <h4 class="label-sm" style="margin-top:16px">Wann und wo integrieren</h4>
+          <div class="integration-hint">
+            <span class="when">Im wöchentlichen Jour Fixe</span>
+            <span class="how"> — feste Rolle, in der Agenda als „Heute D.A.: [Name]" sichtbar.</span>
+          </div>
+          <div class="integration-hint">
+            <span class="when">Bei Entscheidungs-Meetings</span>
+            <span class="how"> — D.A. spricht als Letzte:r, bevor abgestimmt wird.</span>
+          </div>
+          <p class="label-sm muted" style="margin-top:12px">Quelle: David Garvin, Harvard Business School</p>
+        </div>
+
+      </div>
+
+      <div style="margin-top:20px">
+        <details>
+          <summary class="title-md serif" style="color:var(--primary)">8 weitere Übungen anzeigen</summary>
+          <p class="body-md muted" style="margin-top:12px">
+            Steelman statt Strawman · 5-Whys · Sokratischer Selbstdialog · Six Thinking Hats ·
+            Decision Journal · Inversion · Cognitive Bias Bingo · Second-Order-Kaskade.
+            Jede mit Schritten, Integrations-Hints und Reflexionsfragen.
+          </p>
+        </details>
+      </div>
+    </div>
+
+    <!-- Integration -->
+    <div>
+      <h2 class="headline-md serif" style="margin-bottom:16px">Integration — in den Alltag</h2>
+      <div class="grid grid-2">
+
+        <div class="card">
+          <h3 class="title-md serif">Decision-Doc-Check</h3>
+          <p class="body-md muted" style="font-style:italic;margin-top:6px">
+            Vor dem Teilen eines Entscheidungsdokuments.
+          </p>
+          <ul style="list-style:none;padding:0;margin-top:12px" class="stack-sm body-md">
+            <li>☐ Ist die Entscheidung explizit benannt?</li>
+            <li>☐ Sind Alternativen dokumentiert?</li>
+            <li>☐ Welche Evidenz stützt die Wahl?</li>
+            <li>☐ Welche Annahmen sind offen?</li>
+            <li>☐ Wer ist Betroffene:r, aber nicht informiert?</li>
+          </ul>
+        </div>
+
+        <div class="card outlined">
+          <div class="flex" style="margin-bottom:8px">
+            <span class="chip rust">Habit</span>
+            <span class="chip">per event</span>
+          </div>
+          <p class="body-md"><strong>Wenn </strong>ich vor dem Absenden einer bestätigenden Zustimmung stehe,</p>
+          <p class="body-md"><strong>dann </strong>frage ich: habe ich wirklich geprüft — oder stimme ich zu, um anschlussfähig zu wirken?</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Coach CTA -->
+    <div class="coach-quote">
+      <div class="text">
+        <h3 class="title-lg serif">Mit dem Skill-Coach arbeiten</h3>
+        <p class="body-md" style="margin-top:6px;opacity:.85">
+          Der KI-Coach ist auf Kritisches Denken spezialisiert. Er stellt Rückfragen, bevor er antwortet, und nennt fehlende Evidenz beim Namen.
+        </p>
+      </div>
+      <button class="btn filled" onclick="show('coach')">Coach öffnen</button>
+    </div>
+
+  </div>
+</section>
+
+<!-- ────────── PLAN ────────── -->
+<section id="plan">
+  <div class="stack-lg">
+    <header style="max-width:720px">
+      <h1 class="display-md serif">Mein Plan</h1>
+      <p class="body-lg muted" style="margin-top:12px">
+        Dein 8-Wochen-Plan mischt bewusst Übungen verschiedener Länge und Formate, damit sie
+        in echte Arbeitstage passen — nicht obendrauf.
+      </p>
+    </header>
+
+    <div class="stepper">
+      <div class="step done"><div class="step-num">01</div><div class="step-label">Foundation</div><div class="step-bar"></div></div>
+      <div class="step active"><div class="step-num">02</div><div class="step-label">Exploration</div><div class="step-bar"></div></div>
+      <div class="step"><div class="step-num">03</div><div class="step-label">Application</div><div class="step-bar"></div></div>
+      <div class="step"><div class="step-num">04</div><div class="step-label">Integration</div><div class="step-bar"></div></div>
+    </div>
+
+    <div class="grid grid-3">
+
+      <div class="plan-week active">
+        <div class="flex-between" style="margin-bottom:8px">
+          <span class="chip primary">Diese Woche</span>
+          <span class="mono label-sm muted">W3 / W8</span>
+        </div>
+        <h3 class="title-md serif" style="margin-bottom:8px">3 geplante Übungen</h3>
+        <div class="plan-row"><span class="body-md">Claim-Map für Slack</span><span class="chip">10 Min</span></div>
+        <div class="plan-row"><span class="body-md">Pre-Mortem im Team</span><span class="chip clay">45 Min</span></div>
+        <div class="plan-row"><span class="body-md">Prüf-Frage vor Zustimmung</span><span class="chip primary">2 Min</span></div>
+      </div>
+
+      <div class="plan-week">
+        <div class="flex-between" style="margin-bottom:8px">
+          <span class="chip">Habit-Spur</span>
+        </div>
+        <h3 class="title-md serif" style="margin-bottom:8px">3 aktive Habits</h3>
+        <div class="plan-row"><span class="body-md"><strong style="color:var(--rust-600)">Neu</strong> · Pause vor Absenden</span><span class="mono label-sm muted">5/7</span></div>
+        <div class="plan-row"><span class="body-md"><strong style="color:var(--clay-700)">Gestärkt</strong> · Wochen-Retro</span><span class="mono label-sm muted">3/3</span></div>
+        <div class="plan-row"><span class="body-md"><strong class="muted">In Veränderung</strong> · 1:1-Fragen</span><span class="mono label-sm muted">2/4</span></div>
+      </div>
+
+      <div class="plan-week">
+        <div class="flex-between" style="margin-bottom:8px">
+          <span class="chip">Meilenstein</span>
+        </div>
+        <h3 class="title-md serif" style="margin-bottom:8px">Re-Assessment W8</h3>
+        <p class="body-md muted" style="margin-top:4px;margin-bottom:16px">
+          Zeigt, was sich gegenüber dem Start verschoben hat.
+        </p>
+        <button class="btn tonal sm">Plan anpassen</button>
+      </div>
+
+    </div>
+
+    <div>
+      <h2 class="headline-md serif" style="margin-bottom:16px">8-Wochen-Übersicht</h2>
+      <div class="grid grid-3">
+        <div class="card outlined">
+          <span class="mono label-sm muted">W1 — Foundation</span>
+          <p class="body-md" style="margin-top:6px">3 Mikro-Lerneinheiten, 2 Analogien gelesen.</p>
+        </div>
+        <div class="card outlined">
+          <span class="mono label-sm muted">W2 — Exploration</span>
+          <p class="body-md" style="margin-top:6px">2 Übungen (1 short, 1 micro), 1 Peer-Austausch.</p>
+        </div>
+        <div class="card outlined" style="border-color:var(--primary)">
+          <span class="mono label-sm" style="color:var(--primary)">W3 — Heute</span>
+          <p class="body-md" style="margin-top:6px">2 Übungen + 1 Habit-Start.</p>
+        </div>
+        <div class="card outlined">
+          <span class="mono label-sm muted">W4 — Application</span>
+          <p class="body-md" style="margin-top:6px">Übung in echtem Stakeholder-Meeting eingebettet.</p>
+        </div>
+        <div class="card outlined">
+          <span class="mono label-sm muted">W5 — Application</span>
+          <p class="body-md" style="margin-top:6px">Devil's Advocate im Jour Fixe rotierend.</p>
+        </div>
+        <div class="card outlined">
+          <span class="mono label-sm muted">W6 — Application</span>
+          <p class="body-md" style="margin-top:6px">Decision Journal als Freitag-Slot etabliert.</p>
+        </div>
+        <div class="card outlined">
+          <span class="mono label-sm muted">W7 — Integration</span>
+          <p class="body-md" style="margin-top:6px">Checkliste in Workflow überführt.</p>
+        </div>
+        <div class="card outlined">
+          <span class="mono label-sm muted">W8 — Re-Assessment</span>
+          <p class="body-md" style="margin-top:6px">Vergleich vs. W1. Nächster Skill.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────── COACH ────────── -->
+<section id="coach">
+  <div class="stack-lg">
+    <header style="max-width:720px">
+      <h1 class="display-md serif">Skill-Coach</h1>
+      <p class="body-lg muted" style="margin-top:12px">
+        Der Coach ist auf jeden Skill spezialisiert — er übernimmt eine eigene Persona, kennt
+        die Übungen und hilft dir, sie auf deine reale Arbeit zu übertragen. Er gibt bewusst
+        kurze Antworten und stellt oft eine Rückfrage, statt direkt zu belehren.
+      </p>
+    </header>
+
+    <div class="grid grid-3">
+
+      <div class="card outlined" style="display:flex;flex-direction:column;gap:12px">
+        <span class="chip primary" style="align-self:flex-start">Coach: Kritisches Denken</span>
+        <p class="body-md" style="font-style:italic">
+          „Du bist ein nüchterner Denk-Sparringspartner. Du stellst Fragen, bevor du
+          antwortest, und benennst, wenn Evidenz fehlt."
+        </p>
+        <div class="stack-sm">
+          <div style="background:var(--cream-50);padding:10px 14px;border-radius:8px" class="body-md">Was behaupte ich hier eigentlich?</div>
+          <div style="background:var(--cream-50);padding:10px 14px;border-radius:8px" class="body-md">Welche Evidenz würde mich überzeugen, dass ich falsch liege?</div>
+          <div style="background:var(--cream-50);padding:10px 14px;border-radius:8px" class="body-md">Wo habe ich diese Woche schnell zugestimmt, ohne zu prüfen?</div>
+        </div>
+      </div>
+
+      <div class="card outlined" style="display:flex;flex-direction:column;gap:12px">
+        <span class="chip rust" style="align-self:flex-start">Coach: Resilienz</span>
+        <p class="body-md" style="font-style:italic">
+          „Ich helfe dir, Belastung wahrzunehmen, ohne in Wellness-Floskeln zu verfallen.
+          Wir suchen das kleinste Experiment, das jetzt etwas verschiebt."
+        </p>
+        <div class="stack-sm">
+          <div style="background:var(--cream-50);padding:10px 14px;border-radius:8px" class="body-md">Wann hatte dein Körper diese Woche kein „aus"?</div>
+          <div style="background:var(--cream-50);padding:10px 14px;border-radius:8px" class="body-md">Was ist deine 30-Sekunden-Regulierung in der Drucksekunde?</div>
+          <div style="background:var(--cream-50);padding:10px 14px;border-radius:8px" class="body-md">Welche Annahme über deine Belastbarkeit ist veraltet?</div>
+        </div>
+      </div>
+
+      <div class="card outlined" style="display:flex;flex-direction:column;gap:12px">
+        <span class="chip clay" style="align-self:flex-start">Coach: AI Literacy</span>
+        <p class="body-md" style="font-style:italic">
+          „Ich gehe davon aus, dass jedes KI-Output prüfenswert ist. Wir trainieren das
+          Verifizieren, nicht das Beeindruckt-Sein."
+        </p>
+        <div class="stack-sm">
+          <div style="background:var(--cream-50);padding:10px 14px;border-radius:8px" class="body-md">Welche Aussage im Output würdest du selbst nicht zitieren?</div>
+          <div style="background:var(--cream-50);padding:10px 14px;border-radius:8px" class="body-md">Wer ist hier der „Mensch im Loop" — und wann genau?</div>
+          <div style="background:var(--cream-50);padding:10px 14px;border-radius:8px" class="body-md">Was hat dein Prompt nicht geklärt, das du wieder klären musstest?</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="card outlined">
+      <h3 class="title-lg serif" style="margin-bottom:8px">Wie der Coach technisch funktioniert</h3>
+      <p class="body-md muted">
+        Pro Skill ein eigenes Persona-Profil mit System-Prompt, das auf der Plattform
+        gepflegt wird. Streaming-Antworten via Anthropic SDK, Prompt-Caching für den
+        stabilen Skill-Kontext, konfigurierbare Base-URL für On-Prem-LLM-Gateways
+        (LiteLLM o.ä.). Ohne API-Key läuft die Plattform ohne Coach weiter — alle anderen
+        Funktionen bleiben verfügbar.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ────────── FRAMEWORKS ────────── -->
+<section id="frameworks">
+  <div class="stack-lg">
+    <header style="max-width:760px">
+      <h1 class="display-md serif">Frameworks im Vergleich</h1>
+      <p class="body-lg muted" style="margin-top:12px">
+        Drei seriöse Quellen zu Future Skills, nebeneinandergestellt. Wir nutzen den
+        Stifterverband 2030 als Backbone, validieren mit Bertelsmann-Marktdaten und
+        referenzieren das WEF für globale Trends.
+      </p>
+    </header>
+
+    <div class="grid grid-3">
+
+      <div class="fw-col">
+        <span class="chip clay">Backbone</span>
+        <h3 class="title-lg serif">Stifterverband — Future Skills 2030</h3>
+        <span class="source">Stifterverband + Allianz für Future Skills · Dez 2025</span>
+        <p class="body-md muted"><strong>30 Skills in 5 Kategorien.</strong> Mit 50+ Expert:innen entwickelt, 1.000+ Stakeholder validiert. Bildungsorientiert, didaktisch unterlegt.</p>
+        <div>
+          <p class="label-sm muted">Methodik</p>
+          <p class="body-md">Bottom-up + Top-down, DE-fokussiert, mit McKinsey & Hochschulen.</p>
+        </div>
+        <div>
+          <p class="label-sm muted">Beispiel-Skills</p>
+          <ul>
+            <li>Kritisches Denken, Selbstkompetenz, Kreativität</li>
+            <li>Resilienz, Innovations-, Nachhaltigkeitskompetenz</li>
+            <li>Dialog-, Demokratie-, Partizipationskompetenz</li>
+            <li>AI Literacy, Data Literacy, Medienkompetenz</li>
+            <li>Softwareentwicklung, Cybersecurity, KI-Expertise</li>
+          </ul>
+        </div>
+        <div class="license warning">
+          <strong>Lizenz CC BY-SA 4.0</strong> · Attribution Pflicht, ShareAlike kann viral wirken. Wir paraphrasieren Definitionen und nennen Skill-Namen frei.
+        </div>
+      </div>
+
+      <div class="fw-col">
+        <span class="chip primary">Globale Trends</span>
+        <h3 class="title-lg serif">WEF — Future of Jobs 2025</h3>
+        <span class="source">World Economic Forum · Jan 2025</span>
+        <p class="body-md muted"><strong>26 Core Skills in 7 Kategorien.</strong> Globale Top-Down-Sicht aus Arbeitgeber-Survey, 1.043 Unternehmen, 14,1 Mio. Mitarbeitende.</p>
+        <div>
+          <p class="label-sm muted">Methodik</p>
+          <p class="body-md">Executive Opinion Survey + LinkedIn / Coursera / Indeed Daten.</p>
+        </div>
+        <div>
+          <p class="label-sm muted">Top-10 wachsend bis 2030</p>
+          <ul>
+            <li>AI & Big Data</li>
+            <li>Networks & Cybersecurity</li>
+            <li>Technological Literacy</li>
+            <li>Creative Thinking</li>
+            <li>Resilience, Flexibility, Agility</li>
+            <li>Curiosity & Lifelong Learning</li>
+            <li>Leadership & Social Influence</li>
+            <li>Analytical Thinking</li>
+            <li>Environmental Stewardship</li>
+            <li>Talent Management</li>
+          </ul>
+        </div>
+        <div class="license danger">
+          <strong>Lizenz CC BY-NC-ND 4.0</strong> · Non-Commercial + No-Derivatives. Wir zeigen nur Skill-Namen als Faktendarstellung mit Quellenangabe.
+        </div>
+      </div>
+
+      <div class="fw-col">
+        <span class="chip rust">Markt-Validierung</span>
+        <h3 class="title-lg serif">Bertelsmann — Future Skills DE</h3>
+        <span class="source">Bertelsmann Stiftung · Stellenanzeigen-Auswertung</span>
+        <p class="body-md muted"><strong>3 Cluster, datengetrieben.</strong> Aus 47 Mio. deutschen Stellenanzeigen abgeleitet — zeigt, welche Skills der DE-Markt tatsächlich nachfragt.</p>
+        <div>
+          <p class="label-sm muted">Methodik</p>
+          <p class="body-md">Natural Language Processing über Stellenanzeigen, jährliche Updates.</p>
+        </div>
+        <div>
+          <p class="label-sm muted">Cluster</p>
+          <ul>
+            <li>Selbstmanagement (Eigeninitiative, Lernbereitschaft, Selbstorganisation)</li>
+            <li>Soziale Kompetenz (Kommunikation, Teamfähigkeit, Empathie)</li>
+            <li>Kognitive Kompetenz (Analyse, Problemlösung, kritisches Denken)</li>
+          </ul>
+        </div>
+        <div class="license">
+          <strong>Lizenz CC BY-SA 4.0</strong> · Marktdaten frei zitierbar mit Attribution. Wir nutzen die Cluster zur Validierung, ob unsere Skill-Priorisierung der Markt-Nachfrage entspricht.
+        </div>
+      </div>
+
+    </div>
+
+    <div class="card outlined">
+      <h3 class="title-lg serif" style="margin-bottom:8px">Mapping — wo überlappen die drei?</h3>
+      <p class="body-md muted">
+        Alle drei haben <strong>Resilienz / Selbstmanagement</strong>, <strong>Kritisches /
+        Analytisches Denken</strong>, <strong>AI &amp; Tech Literacy</strong> und
+        <strong>Kommunikation</strong> als Top-Themen. Der Stifterverband bringt zusätzlich
+        die <em>gemeinschaftsorientierten</em> Skills (Demokratie, Partizipation), die
+        WEF und Bertelsmann nicht prominent führen. Konsequenz für unsere Plattform: wir
+        starten mit Skills, die in allen drei Frameworks vorkommen — dort ist der Nachweis
+        am dichtesten.
+      </p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="attribution">
+      <p>
+        Strukturell basierend auf dem
+        <a href="https://www.stifterverband.org/medien/future-skills-2030" style="color:var(--primary);text-decoration:underline">
+          Future-Skills-Framework 2030</a>
+        des Stifterverbands für die Deutsche Wissenschaft e.V. (CC BY-SA 4.0).
+        Definitionen und Übungen sind eigene Texte. Skill-Namen und Kategorien werden als
+        Faktendarstellung verwendet.
+      </p>
+      <p style="margin-top:8px">
+        Vergleichsdaten: World Economic Forum, Future of Jobs Report 2025 (CC BY-NC-ND 4.0,
+        Faktendarstellung); Bertelsmann Stiftung, Future Skills Projekt (CC BY-SA 4.0).
+      </p>
+    </div>
+    <div>
+      <p>Selbst gehostet, deine Daten bleiben bei dir.</p>
+      <p class="mono label-sm" style="margin-top:6px">Branch: claude/future-skills-platform-Skt3k</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function show(tab){
+    document.querySelectorAll('section').forEach(s => s.classList.remove('show'));
+    document.querySelectorAll('nav.tabs button').forEach(b => b.classList.remove('active'));
+    document.getElementById(tab).classList.add('show');
+    document.querySelector('nav.tabs button[data-tab="' + tab + '"]').classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  document.getElementById('nav').addEventListener('click', (e) => {
+    if (e.target.dataset.tab) show(e.target.dataset.tab);
+  });
+</script>
+
+</body>
+</html>
