@@ -5,16 +5,26 @@ import { Chip } from "@/components/ui/Chip";
 import { Button } from "@/components/ui/Button";
 import { PhaseStepper } from "@/components/ui/PhaseStepper";
 import { ExerciseCard } from "@/components/skills/ExerciseCard";
+import { LevelPicker } from "@/components/skills/LevelPicker";
+import { prisma } from "@/lib/db";
+import { getSessionUserId } from "@/lib/auth";
 import { t } from "@/lib/i18n";
 
 export function generateStaticParams() {
   return listSkills().map((s) => ({ slug: s.slug }));
 }
 
+export const dynamic = "force-dynamic";
+
 export default async function SkillPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const skill = getSkill(slug);
   if (!skill) notFound();
+
+  const userId = await getSessionUserId().catch(() => "demo");
+  const existing = await prisma.skillLevel
+    .findUnique({ where: { userId_skillSlug: { userId, skillSlug: slug } } })
+    .catch(() => null);
 
   return (
     <div className="space-y-10">
@@ -34,6 +44,25 @@ export default async function SkillPage({ params }: { params: Promise<{ slug: st
       <section className="bg-surface-container rounded-lg p-4">
         <PhaseStepper current="foundation" />
       </section>
+
+      {/* Self-positioning — only shown when the skill has L1-L4 anchors. */}
+      {skill.levelAnchors && (
+        <section>
+          <div className="mb-4 max-w-3xl">
+            <h2 className="font-serif text-headline-md text-on-surface mb-1">Wo stehst du gerade?</h2>
+            <p className="text-body-md text-on-surface-muted">
+              Vier Stufen mit konkreten Anhaltspunkten — aus der Außen- und Innensicht. Wähl die,
+              die sich am ehrlichsten anfühlt. Du kannst dich jederzeit umpositionieren.
+            </p>
+          </div>
+          <LevelPicker
+            skillSlug={skill.slug}
+            initialLevel={existing?.level}
+            initialRationale={existing?.rationale ?? undefined}
+            anchors={skill.levelAnchors}
+          />
+        </section>
+      )}
 
       {/* Analogies */}
       <section>

@@ -75,6 +75,7 @@ export default async function DiscoverPage({ params }: { params: Promise<{ slug:
           skillSlug={skill.slug}
           initialLevel={existing?.level}
           initialRationale={existing?.rationale ?? undefined}
+          anchors={skill.levelAnchors}
         />
       </section>
 

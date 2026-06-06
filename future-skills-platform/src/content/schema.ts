@@ -131,6 +131,13 @@ export const HabitTemplate = z.object({
   cadence: z.enum(["daily", "weekly", "per_event"]),
 });
 
+export const LevelAnchor = z.object({
+  level: z.enum(["L1", "L2", "L3", "L4"]),
+  observable: LocalizedString,   // "Beobachtbar von außen" — what others see
+  innerMarker: LocalizedString,  // "Innerer Marker" — what the person notices in themselves
+});
+export type LevelAnchor = z.infer<typeof LevelAnchor>;
+
 export const CoachProfile = z.object({
   // Short identity the AI coach adopts when scoped to this skill.
   persona: LocalizedString,
@@ -150,6 +157,10 @@ export const Skill = z.object({
   relatedSkills: z.array(z.string()).default([]),
 
   analogies: z.array(Analogy).min(1),
+
+  // Self-positioning anchors L1-L4. Optional during rollout — skills without
+  // anchors fall back to the generic skill detail without the positioning card.
+  levelAnchors: z.array(LevelAnchor).length(4).optional(),
 
   foundation: z.array(FoundationModule).min(1),
   exercises: z.array(Exercise).min(10),       // plan mandates at least 10

@@ -23,6 +23,49 @@ export const aiLiteracy: Skill = {
   megatrendTags: ["ki", "prompting", "ethik", "dsgvo"],
   relatedSkills: ["kritisches-denken", "data-literacy"],
 
+  // ── Level-Anker — Selbstpositionierung L1-L4 ─────────────
+  // DigComp 2.2 Levels 1-6 ("with guidance" → "guide others") + U.S. DoL
+  // AI Literacy Framework (Understand → Direct → Evaluate → Use Responsibly).
+  // L3-Marker: Halluzinationen riechen, bevor man sie prüft.
+  levelAnchors: [
+    {
+      level: "L1",
+      observable: {
+        de: "Ich benutze ChatGPT für E-Mail-Entwürfe, wenn jemand es mir zeigt.",
+      },
+      innerMarker: {
+        de: "Ich weiß nicht genau, wann das Modell halluziniert — ich vertraue eher dem Selbstbewusstsein der Antwort.",
+      },
+    },
+    {
+      level: "L2",
+      observable: {
+        de: "Ich baue mir Prompts zusammen, die „ganz gut“ funktionieren, und kopiere Output direkt rein — bei Low-Stakes-Texten.",
+      },
+      innerMarker: {
+        de: "Ich merke nachträglich, wenn die KI etwas erfunden hat, und ärgere mich.",
+      },
+    },
+    {
+      level: "L3",
+      observable: {
+        de: "Im Kunden-Call nutze ich die KI live, sage aber: „Das müssen wir noch gegen die Originalquelle prüfen — ich mache das bis morgen.“",
+      },
+      innerMarker: {
+        de: "Ich rieche bei einer KI-Antwort, wo sie wahrscheinlich falsch ist, bevor ich nachprüfe.",
+      },
+    },
+    {
+      level: "L4",
+      observable: {
+        de: "Ich zeige Kolleg:innen nicht welchen Prompt, sondern wie sie selbst einen besseren bauen — und wo das Tool sie täuschen wird.",
+      },
+      innerMarker: {
+        de: "Ich erkenne in fremden KI-Workflows die Stelle, an der das Risiko sitzt, ohne den Use Case zu kennen.",
+      },
+    },
+  ],
+
   // ── Analogies ─────────────────────────────────────────────
   analogies: [
     {

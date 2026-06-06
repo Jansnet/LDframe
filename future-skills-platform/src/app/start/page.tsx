@@ -60,30 +60,27 @@ export default function StartPage() {
     <div className="space-y-10 max-w-2xl">
       <header>
         <h1 className="font-serif text-display-md text-on-surface mb-3">
-          Lass uns kurz schauen, wo du gerade stehst.
+          Zwei Fragen — und ich höre genauer hin.
         </h1>
         <p className="text-body-lg text-on-surface-muted">
-          Zwei Fragen, eine Minute. Ich schlage dir auf der Basis deiner Antworten 2–3 Skills
-          vor, an denen es sich gerade lohnt zu arbeiten. Du kannst auch direkt im{" "}
-          <Link href="/" className="text-primary underline">Skill-Atlas</Link> stöbern oder
-          dir eine{" "}
-          <Link href="/blind-spots" className="text-primary underline">Übersicht über blinde Flecken</Link>{" "}
-          ansehen.
+          Keine Skala, kein Quiz. Zwei Fragen, ehrlich beantwortet, und ich schlage dir
+          2–3 Skills vor, an denen sich diese Woche etwas zu bewegen lohnt. Lieber direkt
+          stöbern? <Link href="/" className="text-primary underline">Skill-Atlas</Link>.
         </p>
       </header>
 
       <div className="space-y-6">
         <Question
           number="01"
-          label="Welche Situation hat dich diese Woche beruflich am meisten beschäftigt?"
-          hint="Konkret, eine Szene. „Ich hab im Steering-Meeting nicht widersprochen, obwohl ..."
+          label="Was hattest du dir für diese Woche vorgenommen, was nicht passiert ist — und was hat stattdessen passiert?"
+          hint="Beide Seiten der Frage zählen. Die „Stattdessen“-Seite zeigt oft, wofür du wirklich Zeit hattest."
           value={situation}
           onChange={setSituation}
         />
         <Question
           number="02"
-          label="Was würde sich für dich verändern, wenn du eine Sache besser könntest?"
-          hint="Stell dir vor, in 4 Wochen läuft etwas anders. Was wäre das?"
+          label="Wann hat diese Woche etwas funktioniert, von dem du dachtest, es würde nicht — und was hast du genau anders gemacht?"
+          hint="Eine konkrete Szene reicht. „Anders gemacht“ ist der wichtige Teil — nicht „Glück gehabt“."
           value={intent}
           onChange={setIntent}
         />
@@ -187,17 +184,11 @@ function SuggestionsView({ suggestions }: { suggestions: Suggestion[] }) {
 
 function SideAffordances() {
   return (
-    <aside className="pt-8 border-t border-outline-variant grid md:grid-cols-2 gap-4">
-      <Link href="/" className="state-layer rounded-sm p-4 bg-surface-container">
+    <aside className="pt-8 border-t border-outline-variant">
+      <Link href="/" className="state-layer rounded-sm p-4 bg-surface-container block max-w-md">
         <p className="font-serif text-title-md text-on-surface">Lieber in Ruhe stöbern?</p>
         <p className="text-body-md text-on-surface-muted mt-1">
           Skill-Atlas mit allen Skills, Analogien und Definitionen.
-        </p>
-      </Link>
-      <Link href="/blind-spots" className="state-layer rounded-sm p-4 bg-surface-container">
-        <p className="font-serif text-title-md text-on-surface">Blinde-Flecken-Finder</p>
-        <p className="text-body-md text-on-surface-muted mt-1">
-          Vorschläge zu Skills, die in deiner Rolle oft übersehen werden.
         </p>
       </Link>
     </aside>

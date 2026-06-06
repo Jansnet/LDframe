@@ -25,6 +25,48 @@ export const resilienz: Skill = {
   megatrendTags: ["stress", "regeneration", "veränderung"],
   relatedSkills: ["selbstkompetenz", "kritisches-denken"],
 
+  // ── Level-Anker — Selbstpositionierung L1-L4 ─────────────
+  // Resilienz-Progression nach Vier-Phasen-Modell (deteriorating → adapting
+  // → recovery → growing) + Benner "competent → proficient → expert".
+  levelAnchors: [
+    {
+      level: "L1",
+      observable: {
+        de: "Nach einem harten Feedback bin ich für zwei Tage stiller im Slack.",
+      },
+      innerMarker: {
+        de: "Ich nehme Kritik mit nach Hause und drehe sie nachts im Kopf.",
+      },
+    },
+    {
+      level: "L2",
+      observable: {
+        de: "Nach einem verlorenen Pitch melde ich mich am nächsten Morgen mit „Was machen wir jetzt?“.",
+      },
+      innerMarker: {
+        de: "Ich kenne meine Erholungs-Tricks (Laufen, Schlafen, mit X reden) — wende sie aber unzuverlässig an.",
+      },
+    },
+    {
+      level: "L3",
+      observable: {
+        de: "Mitten in einer Eskalation atme ich hörbar einmal durch und sage: „Lass uns das in zwei Schritte trennen.“",
+      },
+      innerMarker: {
+        de: "Ich spüre den Stress-Schub, aber er nimmt mir nicht die Sprache.",
+      },
+    },
+    {
+      level: "L4",
+      observable: {
+        de: "Wenn jemand im Team zusammenbricht, frage ich nicht „Geht's?“ sondern „Was brauchst du als Nächstes?“.",
+      },
+      innerMarker: {
+        de: "Ich habe keine Angst vor der Krisen-Stimmung anderer — sie steckt mich nicht mehr an.",
+      },
+    },
+  ],
+
   // ── Analogies ─────────────────────────────────────────────
   analogies: [
     {

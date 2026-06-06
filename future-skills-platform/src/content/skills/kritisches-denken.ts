@@ -28,6 +28,50 @@ export const kritischesDenken: Skill = {
   megatrendTags: ["entscheidung", "kommunikation", "ki"],
   relatedSkills: ["ai-literacy", "selbstkompetenz"],
 
+  // ── Level-Anker — Selbstpositionierung L1-L4 ─────────────
+  // Synthese aus DigComp 2.2 ("with guidance" → "guide others"),
+  // Dreyfus/Benner (novice → expert) und BARS-Methodik (observable behaviors).
+  // Anker-Logik: L1 = Wahrnehmung ohne Handlung, L2 = Anwendung im Schonraum,
+  // L3 = Verhalten unter Druck, L4 = Transfer ohne Predigt.
+  levelAnchors: [
+    {
+      level: "L1",
+      observable: {
+        de: "Ich nicke in Meetings mit und google die genannte Studie später, wenn überhaupt.",
+      },
+      innerMarker: {
+        de: "Mir fällt erst beim Heimweg ein, dass die Zahl seltsam war.",
+      },
+    },
+    {
+      level: "L2",
+      observable: {
+        de: "In Retros frage ich nach: „Wie kommen wir auf diese Zahl?“ — bei Themen, die mich nicht persönlich betreffen.",
+      },
+      innerMarker: {
+        de: "Ich merke, dass ich Mut brauche, um nachzufragen, und schiebe es bei wichtigen Themen lieber.",
+      },
+    },
+    {
+      level: "L3",
+      observable: {
+        de: "In Steering-Meetings sage ich laut: „Ich brauche kurz, eine Annahme zu prüfen“ — und tu's.",
+      },
+      innerMarker: {
+        de: "Ich erkenne den Reflex zur Zustimmung, bevor er rausgeht.",
+      },
+    },
+    {
+      level: "L4",
+      observable: {
+        de: "Ich stelle Junior-Kolleg:innen die Frage so, dass sie die Lücke im Argument finden, nicht ich.",
+      },
+      innerMarker: {
+        de: "Ich freue mich, wenn meine eigene These zerlegt wird — es spart Zeit.",
+      },
+    },
+  ],
+
   // ── Analogies ─────────────────────────────────────────────
   analogies: [
     {
