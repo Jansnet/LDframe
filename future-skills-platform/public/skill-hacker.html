@@ -142,7 +142,10 @@
   <div class="topbar-inner">
     <div class="logo">Skill Hacker <span class="v">v0.1</span></div>
     <nav class="tabs" id="nav">
-      <button data-tab="atlas" class="active">Atlas</button>
+      <button data-tab="start" class="active">Start</button>
+      <button data-tab="atlas">Atlas</button>
+      <button data-tab="discover">Discover</button>
+      <button data-tab="blind">Blinde Flecken</button>
       <button data-tab="skill">Skill</button>
       <button data-tab="plan">Mein Plan</button>
       <button data-tab="coach">Coach</button>
@@ -153,8 +156,191 @@
 
 <main>
 
+<!-- ────────── START (Gap Engine) ────────── -->
+<section id="start" class="show">
+  <div class="stack-lg" style="max-width:720px">
+    <div>
+      <h1 class="display-md serif">Lass uns kurz schauen, wo du gerade stehst.</h1>
+      <p class="body-lg muted" style="margin-top:16px">
+        Zwei Fragen, eine Minute. Auf Basis deiner Antworten schlage ich dir 2–3 Skills vor.
+        Du kannst auch direkt im <a onclick="show('atlas')" style="color:var(--primary);text-decoration:underline;cursor:pointer">Skill-Atlas</a> stöbern
+        oder dir die <a onclick="show('blind')" style="color:var(--primary);text-decoration:underline;cursor:pointer">blinden Flecken</a> ansehen.
+      </p>
+    </div>
+
+    <div class="card">
+      <div style="display:flex;gap:12px;align-items:baseline;margin-bottom:8px">
+        <span class="mono label-sm" style="color:var(--primary)">01</span>
+        <p class="title-lg serif" style="margin:0">Welche Situation hat dich diese Woche beruflich am meisten beschäftigt?</p>
+      </div>
+      <p class="body-md muted" style="font-style:italic;margin-bottom:12px">
+        Konkret, eine Szene. „Ich hab im Steering-Meeting nicht widersprochen, obwohl ..."
+      </p>
+      <textarea rows="3" placeholder="In deinen Worten ..." style="width:100%;border:1px solid var(--outline-variant);border-radius:8px;padding:12px;font-family:inherit;font-size:15px;background:var(--surface)"></textarea>
+    </div>
+
+    <div class="card">
+      <div style="display:flex;gap:12px;align-items:baseline;margin-bottom:8px">
+        <span class="mono label-sm" style="color:var(--primary)">02</span>
+        <p class="title-lg serif" style="margin:0">Was würde sich verändern, wenn du eine Sache besser könntest?</p>
+      </div>
+      <p class="body-md muted" style="font-style:italic;margin-bottom:12px">
+        Stell dir vor, in 4 Wochen läuft etwas anders. Was wäre das?
+      </p>
+      <textarea rows="3" placeholder="In deinen Worten ..." style="width:100%;border:1px solid var(--outline-variant);border-radius:8px;padding:12px;font-family:inherit;font-size:15px;background:var(--surface)"></textarea>
+    </div>
+
+    <div class="flex">
+      <button class="btn filled" onclick="show('atlas')">Skill-Vorschläge ansehen</button>
+      <a onclick="show('atlas')" class="body-md muted" style="text-decoration:underline;cursor:pointer">Überspringen — zum Atlas</a>
+    </div>
+
+    <hr/>
+
+    <div class="grid grid-2">
+      <div class="card outlined" onclick="show('atlas')" style="cursor:pointer">
+        <p class="title-md serif">Lieber in Ruhe stöbern?</p>
+        <p class="body-md muted" style="margin-top:6px">Skill-Atlas mit allen Skills, Analogien und Definitionen.</p>
+      </div>
+      <div class="card outlined" onclick="show('blind')" style="cursor:pointer">
+        <p class="title-md serif">Blinde-Flecken-Finder</p>
+        <p class="body-md muted" style="margin-top:6px">Vorschläge zu Skills, die in deiner Rolle oft übersehen werden.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────── DISCOVER (Skill-Tiefe + 4 Level) ────────── -->
+<section id="discover">
+  <div class="stack-lg">
+    <header style="max-width:760px">
+      <span class="chip clay">Grundlegend</span>
+      <h1 class="display-md serif" style="margin-top:12px">Kritisches Denken — was geht da eigentlich ab?</h1>
+      <p class="body-lg muted" style="margin-top:12px">
+        Eine ehrliche Selbstpositionierung in 3 Minuten. Kein Quiz, kein Score. Du wählst
+        das Level, das sich am ehrlichsten anfühlt — und siehst direkt, was an dieser
+        Stelle für dich der nächste Schritt wäre.
+      </p>
+    </header>
+
+    <div class="card">
+      <p class="body-lg">Behauptungen, Argumente und Annahmen aktiv prüfen — Evidenz, Logik und Perspektive einbeziehen, statt automatisch zuzustimmen oder zu widersprechen.</p>
+    </div>
+
+    <div>
+      <h2 class="headline-md serif" style="margin-bottom:8px">Wo stehst du gerade?</h2>
+      <p class="body-md muted" style="margin-bottom:20px;max-width:600px">
+        Vier Stufen, locker. Auch „Hab davon gehört" ist das richtige, wenn das gerade ehrlich ist.
+      </p>
+      <div class="grid grid-2">
+        <div class="card outlined">
+          <div class="flex-between" style="margin-bottom:8px">
+            <span class="mono label-sm" style="color:var(--primary)">L1</span>
+            <span class="chip">Selbsteinordnung</span>
+          </div>
+          <h3 class="title-md serif">Hab mal davon gehört</h3>
+          <p class="body-md muted" style="margin-top:8px">Du erkennst den Begriff, kannst aber nicht sicher sagen, was er konkret im Arbeitsalltag heißt.</p>
+          <button class="btn tonal sm" style="margin-top:16px">Da bin ich gerade</button>
+        </div>
+        <div class="card outlined">
+          <div class="flex-between" style="margin-bottom:8px">
+            <span class="mono label-sm" style="color:var(--primary)">L2</span>
+            <span class="chip">Selbsteinordnung</span>
+          </div>
+          <h3 class="title-md serif">Kann es grundsätzlich</h3>
+          <p class="body-md muted" style="margin-top:8px">Du kannst den Skill in entspannten Situationen anwenden, fällst aber unter Druck zurück in alte Muster.</p>
+          <button class="btn tonal sm" style="margin-top:16px">Da bin ich gerade</button>
+        </div>
+        <div class="card outlined">
+          <div class="flex-between" style="margin-bottom:8px">
+            <span class="mono label-sm" style="color:var(--primary)">L3</span>
+            <span class="chip">Selbsteinordnung</span>
+          </div>
+          <h3 class="title-md serif">Wende es regelmäßig an</h3>
+          <p class="body-md muted" style="margin-top:8px">Der Skill ist in deinem Repertoire — auch unter Stress, im Konflikt, im Meeting mit Senior-Stakeholdern.</p>
+          <button class="btn tonal sm" style="margin-top:16px">Da bin ich gerade</button>
+        </div>
+        <div class="card outlined">
+          <div class="flex-between" style="margin-bottom:8px">
+            <span class="mono label-sm" style="color:var(--primary)">L4</span>
+            <span class="chip">Selbsteinordnung</span>
+          </div>
+          <h3 class="title-md serif">Kann es anderen beibringen</h3>
+          <p class="body-md muted" style="margin-top:8px">Du erkennst, wenn andere am Skill scheitern, kannst es benennen ohne zu beschämen, und führst andere weiter.</p>
+          <button class="btn tonal sm" style="margin-top:16px">Da bin ich gerade</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="coach-quote">
+      <div class="text">
+        <h3 class="title-lg serif">Bereit für den nächsten Schritt?</h3>
+        <p class="body-md" style="margin-top:6px;opacity:.85">
+          Wenn der Skill für dich passt, starte den 4-Wochen-Zyklus mit einer eigenen Identity Statement.
+        </p>
+      </div>
+      <button class="btn filled" onclick="show('skill')">Mit diesem Skill starten</button>
+    </div>
+  </div>
+</section>
+
+<!-- ────────── BLIND SPOTS ────────── -->
+<section id="blind">
+  <div class="stack-lg">
+    <header style="max-width:760px">
+      <h1 class="display-md serif">Blinde-Flecken-Finder</h1>
+      <p class="body-lg muted" style="margin-top:12px">
+        Skills, an die viele in deiner Rolle nicht denken — und an denen es sich oft lohnt zu schauen.
+        Kein Pflichtprogramm. Klick rein, wenn dich was anspricht.
+      </p>
+    </header>
+
+    <div class="grid grid-3">
+      <div class="card outlined interactive" onclick="show('discover')" style="cursor:pointer">
+        <div class="flex-between" style="margin-bottom:8px">
+          <span class="chip clay">Grundlegend</span>
+          <span class="mono label-sm muted">noch nicht eingeordnet</span>
+        </div>
+        <h3 class="title-md serif">Kritisches Denken</h3>
+        <p class="body-md" style="font-style:italic;margin-top:8px">„Wird oft als ‚das tu ich doch immer‘ empfunden — und ist trotzdem die häufigste Lücke in Strategie-Meetings."</p>
+        <p style="margin-top:12px;color:var(--primary)" class="label-sm">Reinschauen →</p>
+      </div>
+
+      <div class="card outlined interactive" style="cursor:pointer">
+        <div class="flex-between" style="margin-bottom:8px">
+          <span class="chip rust">Transformativ</span>
+          <span class="mono label-sm muted">noch nicht eingeordnet</span>
+        </div>
+        <h3 class="title-md serif">Resilienz</h3>
+        <p class="body-md" style="font-style:italic;margin-top:8px">„Wird im Stress übersprungen — paradoxerweise genau dann am wichtigsten."</p>
+        <p style="margin-top:12px;color:var(--primary)" class="label-sm">Reinschauen →</p>
+      </div>
+
+      <div class="card outlined interactive" style="cursor:pointer">
+        <div class="flex-between" style="margin-bottom:8px">
+          <span class="chip primary">Digital</span>
+          <span class="mono label-sm muted">noch nicht eingeordnet</span>
+        </div>
+        <h3 class="title-md serif">AI Literacy</h3>
+        <p class="body-md" style="font-style:italic;margin-top:8px">„Wird mit Tool-Bedienung verwechselt. Eigentliche Lücke: Verifizieren und Mensch-im-Loop entscheiden."</p>
+        <p style="margin-top:12px;color:var(--primary)" class="label-sm">Reinschauen →</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 class="title-lg serif">Warum so?</h3>
+      <p class="body-md" style="margin-top:8px">
+        Diese Seite ist absichtlich keine Diagnose. Echte blinde Flecken erkennt man nicht
+        durch Klicken, sondern durch Anwenden — und durch ehrliches Feedback von anderen. Wir
+        nutzen sie hier nur als sanfte Erinnerung: nicht jeder Skill, der wichtig wäre, kommt
+        von allein auf den Radar.
+      </p>
+    </div>
+  </div>
+</section>
+
 <!-- ────────── ATLAS ────────── -->
-<section id="atlas" class="show">
+<section id="atlas">
   <div class="stack-lg">
     <div style="max-width:720px">
       <h1 class="display-md serif">Skill Hacker — Zukunftskompetenzen, trainierbar gemacht.</h1>
@@ -163,6 +349,10 @@
         einen vollständigen Lernzyklus aus <strong style="color:var(--on-surface)">Foundation → Exploration → Application → Integration</strong>,
         passt sich an deine Jobrolle an und baut Übungen in deinen Arbeitsalltag ein — statt obendrauf.
       </p>
+      <div class="flex" style="margin-top:24px">
+        <button class="btn filled" onclick="show('start')">Zwei Fragen, dann Vorschläge</button>
+        <a onclick="show('blind')" class="body-md" style="color:var(--primary);text-decoration:underline;cursor:pointer">Oder: Blinde-Flecken-Finder</a>
+      </div>
     </div>
 
     <div class="flex-between">

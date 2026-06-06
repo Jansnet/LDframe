@@ -48,6 +48,12 @@ model User {
   habits            Habit[]
   roleTranslations  RoleTranslation[]
   teamMemberships   TeamMember[]
+  // Behavior-change layer (HILL backbone, not surfaced as such in UI)
+  gapClassifications GapClassification[]
+  skillLevels       SkillLevel[]
+  identityStatements IdentityStatement[]
+  behaviorEvidences BehaviorEvidence[]
+  artefacts         Artefact[]
 
   @@index([organizationId])
 }
@@ -200,4 +206,93 @@ model CustomExercise {
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   @@index([organizationId, skillSlug])
+}
+
+// ── Behavior-change layer (HILL backbone, never surfaced as "HILL" in UI) ──
+//
+// Three backend subsystems:
+//   1. Gap Engine        — Urgency + Agency  (GapClassification + IdentityStatement)
+//   2. Coach/Cohort      — Collaboration + Hybrid (existing Cohort + future peer space)
+//   3. Artefact/Reflect  — Action/Sharing + Assessment-as-Learning (Artefact + BehaviorEvidence)
+
+// Captures the user's 2-question gap-engine answers and the LLM's skill-confidence map.
+// Drives onboarding ("here's why we suggest these 3 skills") and re-engagement.
+model GapClassification {
+  id          String   @id @default(cuid())
+  userId      String
+  // What we asked + how the user answered. Stored as JSON to allow evolving question sets.
+  questions   Json     // { situation: string, intent: string, ... }
+  // LLM output: ranked list of skills with rationale text per skill.
+  suggestions Json     // [{ skillSlug, confidence, rationale }]
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+}
+
+// Lightweight 4-stage self-positioning per skill — Dreyfus-inspired.
+// NOT a quiz. Just "where do I stand right now?" Updated freely by user.
+// Levels: 1 = heard_of, 2 = basics, 3 = regular_use, 4 = can_teach
+model SkillLevel {
+  id        String   @id @default(cuid())
+  userId    String
+  skillSlug String
+  level     Int      // 1..4
+  rationale String?  // optional 1-line note from the user
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, skillSlug])
+}
+
+// "In 4 weeks I'll say about myself: '...'" — the identity-based anchor for a cycle.
+// One active per user per skill at a time.
+model IdentityStatement {
+  id        String   @id @default(cuid())
+  userId    String
+  skillSlug String
+  statement String   // user's own words
+  weeks     Int      @default(4)
+  startedAt DateTime @default(now())
+  fulfilled Boolean  @default(false)
+  closedAt  DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, skillSlug])
+}
+
+// 3 concrete real situations from the user's past week per skill.
+// Replaces Likert self-rating as the assessment baseline.
+model BehaviorEvidence {
+  id        String   @id @default(cuid())
+  userId    String
+  skillSlug String
+  // Three free-text situations + what the user actually did.
+  situations Json    // [{ context, action }, ...]
+  capturedAt DateTime @default(now())
+  // Optional re-capture after cycle end → enables delta visualization.
+  cycleStage String  @default("baseline") // baseline | midpoint | closing
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, skillSlug, capturedAt])
+}
+
+// First-class artefact produced by exercises. Powers the "show your work" feed
+// in cohorts and gates progress in solo mode (no completion without artefact).
+model Artefact {
+  id        String   @id @default(cuid())
+  userId    String
+  skillSlug String
+  exerciseId String?
+  kind      String   // journal | checklist | list | structured
+  content   Json
+  visibility String  @default("private") // private | cohort | org
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, skillSlug, createdAt])
 }

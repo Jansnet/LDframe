@@ -1,6 +1,8 @@
+import Link from "next/link";
 import { listSkills } from "@/content/registry";
 import { SkillCard } from "@/components/skills/SkillCard";
 import { Chip } from "@/components/ui/Chip";
+import { Button } from "@/components/ui/Button";
 
 export default function HomePage() {
   const skills = listSkills();
@@ -18,6 +20,14 @@ export default function HomePage() {
           passt sich an deine Jobrolle an und baut Übungen in deinen Arbeitsalltag ein — statt
           obendrauf.
         </p>
+        <div className="mt-6 flex flex-wrap gap-3 items-center">
+          <Link href="/start">
+            <Button variant="filled">Zwei Fragen, dann Vorschläge</Button>
+          </Link>
+          <Link href="/blind-spots" className="text-body-md text-primary underline">
+            Oder: Blinde-Flecken-Finder
+          </Link>
+        </div>
       </section>
 
       <section>

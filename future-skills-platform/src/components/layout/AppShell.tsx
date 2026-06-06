@@ -20,8 +20,9 @@ function TopBar() {
           <span className="ml-2 font-mono text-label-sm text-primary">v0.1</span>
         </Link>
         <nav className="flex items-center gap-1">
+          <NavLink href="/start" label="Start" />
           <NavLink href="/" label="Atlas" />
-          <NavLink href="/assessment" label="Assessment" />
+          <NavLink href="/blind-spots" label="Blinde Flecken" />
           <NavLink href="/plan" label="Mein Plan" />
           <NavLink href="/coach" label="Coach" />
           <NavLink href="/frameworks" label="Frameworks" />
