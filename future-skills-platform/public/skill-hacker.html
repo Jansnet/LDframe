@@ -156,6 +156,8 @@
       <button data-tab="close">Abschluss</button>
       <button data-tab="manager">Manager</button>
       <button data-tab="login">Sign-in</button>
+      <button data-tab="admin">Admin</button>
+      <button data-tab="tour">Tour</button>
       <button data-tab="snapshot">Snapshot</button>
       <button data-tab="coach">Coach</button>
       <button data-tab="frameworks">Frameworks</button>
@@ -1534,6 +1536,119 @@ Danke! Wenn du Fragen hast, einfach kurz zurück.</textarea>
     <div class="card">
       <p class="title-md serif">Was bekommt deine Firma davon?</p>
       <p class="body-md" style="margin-top:8px">Pro Person und Skill gibt es Artefakte, ein Identity Statement, drei Situationen Behavior Evidence. Auf Organisationsebene aggregiert: was wird tatsächlich gelernt, woran zeigt es sich. Nie Vergleich zwischen Personen, nie Punktzahlen.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ────────── ADMIN ORG ────────── -->
+<section id="admin">
+  <div class="stack-lg">
+    <header style="max-width:760px">
+      <span class="chip rust">Admin · Acme GmbH</span>
+      <h1 class="display-md serif" style="margin-top:12px">Was wird hier gerade tatsächlich gelernt?</h1>
+      <p class="body-lg muted" style="margin-top:12px">
+        Rollup der letzten 90 Tage. Keine Ranglisten, keine Punktzahlen, keine personenbezogenen
+        Aussagen. Das hier ersetzt 1:1-Gespräche nicht — es hilft dir, bessere Fragen zu stellen.
+      </p>
+    </header>
+
+    <section class="grid" style="grid-template-columns:repeat(auto-fit, minmax(160px,1fr));gap:16px">
+      <div class="card"><span class="mono label-sm" style="color:var(--primary);display:block">Mitglieder</span><p class="display-md serif" style="margin-top:6px">42</p></div>
+      <div class="card"><span class="mono label-sm" style="color:var(--primary);display:block">Aktive Zyklen</span><p class="display-md serif" style="margin-top:6px">17</p></div>
+      <div class="card"><span class="mono label-sm" style="color:var(--primary);display:block">Abgeschlossen</span><p class="display-md serif" style="margin-top:6px">9</p><p class="body-md muted">davon 6 ✓</p></div>
+      <div class="card"><span class="mono label-sm" style="color:var(--primary);display:block">Artefakte (90d)</span><p class="display-md serif" style="margin-top:6px">128</p></div>
+      <div class="card"><span class="mono label-sm" style="color:var(--primary);display:block">Fallrunden (90d)</span><p class="display-md serif" style="margin-top:6px">11</p></div>
+    </section>
+
+    <div>
+      <h2 class="headline-md serif" style="margin-bottom:12px">Was läuft gerade</h2>
+      <div class="grid grid-3">
+        <div class="card outlined"><span class="chip clay">Grundlegend</span><p class="title-md serif" style="margin-top:8px">Kritisches Denken</p><p class="headline-md serif" style="margin-top:6px">7</p><p class="body-md muted">aktive Zyklen</p></div>
+        <div class="card outlined"><span class="chip rust">Transformativ</span><p class="title-md serif" style="margin-top:8px">Resilienz</p><p class="headline-md serif" style="margin-top:6px">5</p><p class="body-md muted">aktive Zyklen</p></div>
+        <div class="card outlined"><span class="chip primary">Digital</span><p class="title-md serif" style="margin-top:8px">AI Literacy</p><p class="headline-md serif" style="margin-top:6px">5</p><p class="body-md muted">aktive Zyklen</p></div>
+      </div>
+    </div>
+
+    <div>
+      <h2 class="headline-md serif" style="margin-bottom:8px">Selbstpositionierung verteilt</h2>
+      <p class="body-md muted" style="max-width:600px;margin-bottom:20px">L1–L4 je Skill, anonymisiert aggregiert. Nicht „wer kann was", sondern „wo sieht die Organisation sich gerade".</p>
+      <div class="stack-sm">
+        <div style="display:grid;grid-template-columns:160px 1fr 40px;gap:12px;align-items:center">
+          <span class="body-md">Kritisches Denken</span>
+          <div style="display:flex;height:24px;border-radius:4px;overflow:hidden;background:var(--surface-container)">
+            <div style="width:25%;background:#EFE4D2"></div><div style="width:40%;background:#E0D1B4"></div><div style="width:25%;background:#CC785C"></div><div style="width:10%;background:#A67A58"></div>
+          </div>
+          <span class="mono label-sm muted" style="text-align:right">20</span>
+        </div>
+        <div style="display:grid;grid-template-columns:160px 1fr 40px;gap:12px;align-items:center">
+          <span class="body-md">Resilienz</span>
+          <div style="display:flex;height:24px;border-radius:4px;overflow:hidden;background:var(--surface-container)">
+            <div style="width:40%;background:#EFE4D2"></div><div style="width:30%;background:#E0D1B4"></div><div style="width:25%;background:#CC785C"></div><div style="width:5%;background:#A67A58"></div>
+          </div>
+          <span class="mono label-sm muted" style="text-align:right">15</span>
+        </div>
+        <div style="display:grid;grid-template-columns:160px 1fr 40px;gap:12px;align-items:center">
+          <span class="body-md">AI Literacy</span>
+          <div style="display:flex;height:24px;border-radius:4px;overflow:hidden;background:var(--surface-container)">
+            <div style="width:55%;background:#EFE4D2"></div><div style="width:30%;background:#E0D1B4"></div><div style="width:15%;background:#CC785C"></div><div style="width:0%;background:#A67A58"></div>
+          </div>
+          <span class="mono label-sm muted" style="text-align:right">18</span>
+        </div>
+      </div>
+      <div class="flex" style="margin-top:12px;font-size:12px;color:var(--on-surface-muted)">
+        <span><span style="display:inline-block;width:10px;height:10px;background:#EFE4D2;margin-right:4px"></span>L1</span>
+        <span><span style="display:inline-block;width:10px;height:10px;background:#E0D1B4;margin-right:4px"></span>L2</span>
+        <span><span style="display:inline-block;width:10px;height:10px;background:#CC785C;margin-right:4px"></span>L3</span>
+        <span><span style="display:inline-block;width:10px;height:10px;background:#A67A58;margin-right:4px"></span>L4</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <p class="title-md serif">Was du hier nicht findest</p>
+      <p class="body-md" style="margin-top:8px">Keine Personennamen, keine 1:1-Vergleiche, keine Bewertungen. Wenn dir das hier eine Frage aufmacht, ist die Antwort: ein echtes Gespräch mit der betreffenden Person — nicht ein Drill-down.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ────────── TOUR ────────── -->
+<section id="tour">
+  <div class="stack-lg">
+    <header style="max-width:760px">
+      <span class="chip primary">Tour</span>
+      <h1 class="display-md serif" style="margin-top:12px">Wie Skill Hacker funktioniert — in vier Stopps.</h1>
+      <p class="body-lg muted" style="margin-top:12px">Keine Folien. Jeder Stopp endet mit einem Link in die echte Anwendung. Du kannst die Tour jederzeit verlassen und später dort weitermachen.</p>
+    </header>
+
+    <ol class="stack" style="list-style:none;padding:0">
+      <li class="card">
+        <div class="flex"><span class="mono label-sm" style="color:var(--primary)">01</span><h2 class="headline-lg serif">Anfangen — ohne lange Diagnose.</h2></div>
+        <p class="body-lg" style="font-style:italic;margin-top:8px">Zwei Fragen, sanfter Einstieg.</p>
+        <p class="body-md" style="margin-top:8px">Statt eines Atlas-Drowns oder eines 30-Fragen-Assessments fragen wir dich nach einer Situation und einem Wunsch. Die KI schlägt 2–3 Skills mit Begründung vor.</p>
+        <div class="flex" style="margin-top:16px"><button class="btn filled" onclick="show('start')">Mit 2 Fragen starten</button><a onclick="show('atlas')" style="color:var(--primary);text-decoration:underline;cursor:pointer">Lieber Atlas</a></div>
+      </li>
+      <li class="card">
+        <div class="flex"><span class="mono label-sm" style="color:var(--primary)">02</span><h2 class="headline-lg serif">Discovery — 4 Levels, kein Quiz.</h2></div>
+        <p class="body-lg" style="font-style:italic;margin-top:8px">Wo stehst du gerade, ehrlich?</p>
+        <p class="body-md" style="margin-top:8px">Jeder Skill hat eine eigene Discovery-Ansicht mit vier Stufen — von „hab davon gehört" bis „kann es anderen beibringen". Du wählst die Stufe, die sich gerade ehrlich anfühlt.</p>
+        <div class="flex" style="margin-top:16px"><button class="btn filled" onclick="show('discover')">Skill ansehen</button><a onclick="show('blind')" style="color:var(--primary);text-decoration:underline;cursor:pointer">Blinde Flecken</a></div>
+      </li>
+      <li class="card">
+        <div class="flex"><span class="mono label-sm" style="color:var(--primary)">03</span><h2 class="headline-lg serif">Zyklus — Identity statt Skill-Description.</h2></div>
+        <p class="body-lg" style="font-style:italic;margin-top:8px">„In 4 Wochen sage ich über mich …"</p>
+        <p class="body-md" style="margin-top:8px">Empirisch der stärkere Anker. Mit der Wahl wird automatisch dein Plan generiert — ein bewusster Mix aus Mikro- und Embedded-Übungen, plus Reflexionsslots.</p>
+        <div class="flex" style="margin-top:16px"><button class="btn filled" onclick="show('identity')">Zyklus formulieren</button><a onclick="show('plan')" style="color:var(--primary);text-decoration:underline;cursor:pointer">Mein aktueller Plan</a></div>
+      </li>
+      <li class="card">
+        <div class="flex"><span class="mono label-sm" style="color:var(--primary)">04</span><h2 class="headline-lg serif">Reflektieren — strukturiert, mit echtem Output.</h2></div>
+        <p class="body-lg" style="font-style:italic;margin-top:8px">Artefakte, Fallrunden, Manager-Loop.</p>
+        <p class="body-md" style="margin-top:8px">Jede Übung produziert ein Artefakt — kein „done" ohne. Bei härteren Situationen: kollegiale Fallberatung in 6 Phasen, solo oder mit Peers. 90-Sek-Mail für die Führungskraft.</p>
+        <div class="flex" style="margin-top:16px"><button class="btn filled" onclick="show('clinic')">Fallrunde anschauen</button><a onclick="show('manager')" style="color:var(--primary);text-decoration:underline;cursor:pointer">Manager-Loop</a></div>
+      </li>
+    </ol>
+
+    <div class="card outlined">
+      <p class="title-md serif">Was du nicht finden wirst</p>
+      <p class="body-md" style="margin-top:8px">Keine Punktzahlen. Keine Ranglisten. Keine täglichen Push-Streaks, die dich bestrafen. Keine Personenvergleiche auf einem Manager-Dashboard. Die Entscheidungen dahinter sind absichtlich — basierend auf empirischer Skill-Building-Forschung (Dochy/Segers HILL, identity-based behavior change, Selbstbestimmungstheorie).</p>
     </div>
   </div>
 </section>

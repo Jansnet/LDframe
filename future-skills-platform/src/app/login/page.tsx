@@ -1,24 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardTitle, CardBody } from "@/components/ui/Card";
 import { Chip } from "@/components/ui/Chip";
 import { Button } from "@/components/ui/Button";
 
 /**
- * /login — minimal email-only sign-in.
+ * /login — request a magic link.
  *
- * For the pilot phase. Production deployments would replace this with a
- * magic-link verification step or SSO redirect — the cookie shape stays
- * the same, so /api/auth/login is the only thing that changes.
+ * Post-submit state shows the calm "check your inbox" copy. In dev mode
+ * the server includes the link directly so single-tenant pilots stay
+ * clickable; the UI surfaces it as a "Direkt anmelden" button.
  */
 export default function LoginPage() {
-  const router = useRouter();
-  const params = useSearchParams();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [devLink, setDevLink] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   async function submit() {
@@ -35,13 +34,55 @@ export default function LoginPage() {
         setError(body.error ?? "Login fehlgeschlagen.");
         return;
       }
-      const next = params.get("next") ?? "/start";
-      router.push(next);
+      const data = await res.json();
+      setSent(true);
+      if (data.devLink) setDevLink(data.devLink);
     } catch {
       setError("Netzwerkfehler.");
     } finally {
       setSubmitting(false);
     }
+  }
+
+  if (sent) {
+    return (
+      <div className="space-y-6 max-w-md">
+        <header>
+          <Chip tone="primary">Mail unterwegs</Chip>
+          <h1 className="font-serif text-display-md text-on-surface mt-2">
+            Check deine Inbox.
+          </h1>
+          <p className="text-body-lg text-on-surface-muted mt-3">
+            Wir haben einen Link an <strong>{email}</strong> geschickt. Der Link ist 15 Minuten
+            gültig und kann nur einmal benutzt werden.
+          </p>
+        </header>
+        {devLink && (
+          <Card variant="outlined" className="border-l-4 border-rust-600">
+            <CardTitle>Dev-Modus</CardTitle>
+            <CardBody>
+              <p className="mb-3">
+                Keine Mail-Konfiguration aktiv — du kannst direkt verifizieren.
+              </p>
+              <a href={devLink}>
+                <Button variant="filled">Direkt anmelden</Button>
+              </a>
+            </CardBody>
+          </Card>
+        )}
+        <Card variant="filled">
+          <CardTitle>Keine Mail bekommen?</CardTitle>
+          <CardBody>
+            <p>
+              Spam-Ordner prüfen. Wenn nach 5 Minuten nichts da ist, fordere einen neuen Link an.
+            </p>
+            <Button variant="tonal" className="mt-3" onClick={() => setSent(false)}>
+              Erneut anfordern
+            </Button>
+          </CardBody>
+        </Card>
+      </div>
+    );
   }
 
   const canSubmit = email.includes("@") && !submitting;
@@ -52,8 +93,8 @@ export default function LoginPage() {
         <Chip tone="primary">Sign-in</Chip>
         <h1 className="font-serif text-display-md text-on-surface">Hallo.</h1>
         <p className="text-body-lg text-on-surface-muted">
-          Wir merken uns deine Reflexionen, Artefakte und Zyklen unter deiner Email — sonst
-          nichts. Kein Tracking, keine Drittanbieter.
+          Wir schicken dir einen einmaligen Link per Mail. Kein Passwort, keine
+          Drittanbieter, kein Tracking.
         </p>
       </header>
 
@@ -81,7 +122,7 @@ export default function LoginPage() {
         </label>
         {error && <p className="text-body-md text-rust-700">{error}</p>}
         <Button onClick={submit} disabled={!canSubmit} variant="filled" className="w-full">
-          {submitting ? "Melde an …" : "Anmelden"}
+          {submitting ? "Schicke Link …" : "Magic-Link anfordern"}
         </Button>
       </Card>
 

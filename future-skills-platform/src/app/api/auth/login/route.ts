@@ -1,20 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
-import { SESSION_COOKIE, buildSessionCookie } from "@/lib/auth";
+import { generateToken, TOKEN_TTL_MS, buildVerifyUrl } from "@/lib/magic-link";
 
 export const runtime = "nodejs";
 
 /**
- * Lightweight magic-link-less login.
+ * Magic-link request.
  *
- * Trade-off: in v1 we accept any email and trust it — combined with an
- * org-scoped invite list this is enough for internal pilots. A magic-link
- * verification step plugs in cleanly later (POST /api/auth/verify with a
- * token mailed to the address).
+ * Always returns 200 (even for invalid emails) so the endpoint doesn't
+ * leak which addresses are registered. The user is told to check their
+ * inbox; the actual mail send is best-effort.
  *
- * Why not OAuth: most pilots will run inside companies with SSO. We don't
- * know which IdP yet. The cookie-session approach keeps optionality open.
+ * In environments without SMTP configured (MAGIC_LINK_DEV=true), the
+ * raw link is included in the response so single-tenant pilots stay
+ * clickable. Production deployments unset MAGIC_LINK_DEV and wire up
+ * SMTP via env vars.
  */
 const Body = z.object({
   email: z.string().email(),
@@ -29,8 +30,8 @@ export async function POST(req: NextRequest) {
   }
   const { email, name, organizationSlug } = parsed.data;
 
-  // Resolve org. Auto-create the "default" org so the demo path works
-  // out-of-the-box; named orgs must be pre-provisioned by an admin.
+  // Pre-provision the user row + org so verification has somewhere to
+  // attach the session. We deliberately do NOT mark email as verified yet.
   let org = await prisma.organization.findUnique({ where: { slug: organizationSlug } });
   if (!org && organizationSlug === "default") {
     org = await prisma.organization.create({
@@ -38,25 +39,36 @@ export async function POST(req: NextRequest) {
     });
   }
   if (!org) {
-    return NextResponse.json({ error: "organization_not_found" }, { status: 404 });
+    // Don't 404 — same generic response to avoid leaking org existence.
+    return NextResponse.json({ ok: true });
   }
-
-  const user = await prisma.user.upsert({
+  await prisma.user.upsert({
     where: { email },
     update: { name: name ?? undefined },
     create: { email, name, organizationId: org.id },
   });
 
-  const cookieValue = buildSessionCookie(user.id);
-  const res = NextResponse.json({ ok: true, userId: user.id });
-  res.cookies.set({
-    name: SESSION_COOKIE,
-    value: cookieValue,
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/",
-    maxAge: 60 * 60 * 24 * 7,
+  // Issue token. Multiple outstanding tokens per email are fine — they all
+  // expire in 15 min, and consuming one consumes one. No revocation needed.
+  const { raw, hash } = generateToken();
+  await prisma.verificationToken.create({
+    data: {
+      email,
+      tokenHash: hash,
+      expiresAt: new Date(Date.now() + TOKEN_TTL_MS),
+    },
   });
-  return res;
+
+  const origin = req.headers.get("origin") ?? new URL(req.url).origin;
+  const link = buildVerifyUrl(origin, raw);
+
+  // Mail integration plugs in here. Until then: surface the link to the
+  // caller iff MAGIC_LINK_DEV is true. This keeps the demo clickable
+  // without ever exposing tokens in production.
+  if (process.env.MAGIC_LINK_DEV === "true") {
+    return NextResponse.json({ ok: true, devLink: link });
+  }
+
+  // TODO: integrate SMTP / transactional email here.
+  return NextResponse.json({ ok: true });
 }

@@ -32,11 +32,15 @@ model Organization {
 model User {
   id             String   @id @default(cuid())
   email          String   @unique
+  emailVerified  DateTime?
   name           String?
   locale         String   @default("de")
   // Free-text role description + structured tags for the Job-Role Translator.
   roleText       String?
   roleTags       Json?    // { industry, seniority, context }
+  // member | admin | coach — admins see the org dashboard; coaches can
+  // facilitate case clinics across cohorts. Default "member".
+  role           String   @default("member")
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   createdAt      DateTime @default(now())
@@ -380,4 +384,21 @@ model CaseClinicParticipant {
   user   User       @relation(fields: [userId],   references: [id], onDelete: Cascade)
 
   @@unique([clinicId, userId])
+}
+
+// ── Magic-link verification ──
+// Short-lived token, single-use. The hash (not the raw token) is stored —
+// even DB read access doesn't expose valid tokens.
+model VerificationToken {
+  id        String   @id @default(cuid())
+  // Email the token was issued to (not necessarily yet a User row).
+  email     String
+  tokenHash String   @unique
+  // member | admin — what role to assign on first sign-in via this token.
+  intent    String   @default("member")
+  expiresAt DateTime
+  consumedAt DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([email, createdAt])
 }

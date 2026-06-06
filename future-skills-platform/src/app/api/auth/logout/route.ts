@@ -3,8 +3,15 @@ import { SESSION_COOKIE } from "@/lib/auth";
 
 export const runtime = "nodejs";
 
-export async function POST(_req: NextRequest) {
-  const res = NextResponse.json({ ok: true });
+/**
+ * Clears the session cookie. Accepts both JSON (programmatic) and form
+ * (account-menu button) posts. For form posts, redirects to /.
+ */
+export async function POST(req: NextRequest) {
+  const wantsRedirect = !req.headers.get("content-type")?.includes("application/json");
+  const res = wantsRedirect
+    ? NextResponse.redirect(new URL("/", req.url), { status: 303 })
+    : NextResponse.json({ ok: true });
   res.cookies.set({
     name: SESSION_COOKIE,
     value: "",

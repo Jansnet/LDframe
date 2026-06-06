@@ -24,7 +24,10 @@ export default function HomePage() {
           <Link href="/start">
             <Button variant="filled">Zwei Fragen, dann Vorschläge</Button>
           </Link>
-          <Link href="/blind-spots" className="text-body-md text-primary underline">
+          <Link href="/tour" className="text-body-md text-primary underline">
+            Erst die Tour sehen
+          </Link>
+          <Link href="/blind-spots" className="text-body-md text-on-surface-muted underline">
             Oder: Blinde-Flecken-Finder
           </Link>
         </div>
