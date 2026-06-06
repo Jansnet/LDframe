@@ -138,12 +138,15 @@ export default async function SkillPage({ params }: { params: Promise<{ slug: st
 
       <section className="bg-primary-container rounded-lg p-6 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h3 className="font-serif text-title-lg text-primary-on-container mb-1">Mit dem Skill-Coach arbeiten</h3>
+          <h3 className="font-serif text-title-lg text-primary-on-container mb-1">Bereit, mit diesem Skill zu starten?</h3>
           <p className="text-body-md text-primary-on-container/80">
-            Der KI-Coach ist auf diesen Skill spezialisiert. Er hilft dir, Übungen auf deine reale Arbeit zu übertragen.
+            Formuliere zuerst deine Identity Statement — was du in 4 Wochen über dich sagen willst.
+            Der AI-Coach kennt den Satz und nutzt ihn in jeder Reflexion.
           </p>
         </div>
-        <Button variant="filled">Coach öffnen</Button>
+        <a href={`/skills/${skill.slug}/start-cycle`}>
+          <Button variant="filled">Zyklus starten</Button>
+        </a>
       </section>
     </div>
   );

@@ -54,6 +54,11 @@ model User {
   identityStatements IdentityStatement[]
   behaviorEvidences BehaviorEvidence[]
   artefacts         Artefact[]
+  streaks           Streak[]
+  badges            Badge[]
+  ownedCaseClinics       CaseClinic[] @relation("CaseClinicOwner")
+  facilitatedCaseClinics CaseClinic[] @relation("CaseClinicFacilitator")
+  caseClinicParticipations CaseClinicParticipant[]
 
   @@index([organizationId])
 }
@@ -295,4 +300,81 @@ model Artefact {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, skillSlug, createdAt])
+}
+
+// ── Gentle gamification ──
+// Streaks and badges, but the soft kind: streaks have monthly freezes (no
+// shame loop), badges are awarded for substantive achievements (artefacts,
+// cycle completion, peer facilitation) — not for clicking around.
+
+model Streak {
+  id          String   @id @default(cuid())
+  userId      String
+  // artefact_weekly | reflection_weekly | cycle_progress
+  kind        String
+  current     Int      @default(0)
+  longest     Int      @default(0)
+  // 3 freezes per month — a missed week doesn't break the streak.
+  freezesAvailable Int @default(3)
+  lastEventAt DateTime?
+  pausedUntil DateTime?
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, kind])
+}
+
+model Badge {
+  id        String   @id @default(cuid())
+  userId    String
+  // first_artefact | five_artefact_week | identity_fulfilled | cycle_completed |
+  // case_clinic_owner | case_clinic_facilitator
+  slug      String
+  awardedAt DateTime @default(now())
+  context   Json?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, slug])
+}
+
+// ── Kollegiale Fallberatung (Case Clinic) ──
+// 6-phase structured peer consultation, established German group format.
+// Works solo (AI as facilitator + steel-man peer) or with 3-6 participants.
+
+model CaseClinic {
+  id            String   @id @default(cuid())
+  caseOwnerId   String
+  facilitatorId String   // can equal caseOwnerId if AI-facilitated solo
+  skillSlug     String?
+  caseText      String   // the situation the owner brings
+  keyQuestion   String?  // distilled question to consult on
+  // setup | case | clarify | hypotheses | resources | agreement | done
+  phase         String   @default("setup")
+  notes         Json?    // per-phase notes captured by facilitator
+  scheduledFor  DateTime?
+  startedAt     DateTime?
+  endedAt       DateTime?
+  isSolo        Boolean  @default(false)
+  createdAt     DateTime @default(now())
+
+  caseOwner    User @relation("CaseClinicOwner",    fields: [caseOwnerId],   references: [id], onDelete: Cascade)
+  facilitator  User @relation("CaseClinicFacilitator", fields: [facilitatorId], references: [id], onDelete: Cascade)
+  participants CaseClinicParticipant[]
+
+  @@index([caseOwnerId, createdAt])
+}
+
+model CaseClinicParticipant {
+  id       String @id @default(cuid())
+  clinicId String
+  userId   String
+  // owner | facilitator | consultant
+  role     String @default("consultant")
+
+  clinic CaseClinic @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+  user   User       @relation(fields: [userId],   references: [id], onDelete: Cascade)
+
+  @@unique([clinicId, userId])
 }

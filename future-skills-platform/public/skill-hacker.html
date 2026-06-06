@@ -146,8 +146,11 @@
       <button data-tab="atlas">Atlas</button>
       <button data-tab="discover">Discover</button>
       <button data-tab="blind">Blinde Flecken</button>
+      <button data-tab="identity">Identity</button>
       <button data-tab="skill">Skill</button>
       <button data-tab="plan">Mein Plan</button>
+      <button data-tab="clinic">Fallberatung</button>
+      <button data-tab="snapshot">Snapshot</button>
       <button data-tab="coach">Coach</button>
       <button data-tab="frameworks">Frameworks</button>
     </nav>
@@ -762,10 +765,16 @@
     <header style="max-width:720px">
       <h1 class="display-md serif">Mein Plan</h1>
       <p class="body-lg muted" style="margin-top:12px">
-        Dein 8-Wochen-Plan mischt bewusst Übungen verschiedener Länge und Formate, damit sie
+        Dein 4-Wochen-Zyklus mischt bewusst Übungen verschiedener Länge und Formate, damit sie
         in echte Arbeitstage passen — nicht obendrauf.
       </p>
     </header>
+
+    <div class="card" style="border-left:4px solid var(--primary)">
+      <span class="mono label-sm" style="color:var(--primary)">IDENTITY STATEMENT</span>
+      <p class="title-lg serif" style="margin-top:4px">„Ich bin jemand, der/die vor einer Zustimmung kurz prüft, was die andere Person eigentlich meint."</p>
+      <p class="body-md muted" style="margin-top:6px">4-Wochen-Zyklus, gestartet vor 8 Tagen.</p>
+    </div>
 
     <div class="stepper">
       <div class="step done"><div class="step-num">01</div><div class="step-label">Foundation</div><div class="step-bar"></div></div>
@@ -799,16 +808,34 @@
 
       <div class="plan-week">
         <div class="flex-between" style="margin-bottom:8px">
-          <span class="chip">Meilenstein</span>
+          <span class="chip">Stille Spur</span>
         </div>
-        <h3 class="title-md serif" style="margin-bottom:8px">Re-Assessment W8</h3>
-        <p class="body-md muted" style="margin-top:4px;margin-bottom:16px">
-          Zeigt, was sich gegenüber dem Start verschoben hat.
-        </p>
-        <button class="btn tonal sm">Plan anpassen</button>
+        <div class="stack-sm">
+          <p><span class="mono label-sm" style="color:var(--primary);display:block">ARTEFAKTE-WOCHE</span><span class="headline-md serif">3 / 5</span></p>
+          <p><span class="mono label-sm" style="color:var(--clay-700);display:block">STREAK</span>2 Wochen · 3 Pausen-Tage übrig</p>
+          <p><span class="mono label-sm" style="color:var(--rust-600);display:block">BADGES</span>Erstes Artefakt · Identity gestartet</p>
+        </div>
       </div>
 
     </div>
+
+    <section class="grid grid-3" style="margin-top:24px">
+      <div class="card outlined interactive" onclick="show('clinic')" style="cursor:pointer">
+        <span class="chip rust" style="margin-bottom:8px">Optional</span>
+        <p class="title-md serif">Kollegiale Fallberatung</p>
+        <p class="body-md muted" style="margin-top:6px">Hast du gerade eine Situation, an der du häkst? Solo mit dem Coach oder mit 3–5 Peers.</p>
+      </div>
+      <div class="card outlined interactive" onclick="show('snapshot')" style="cursor:pointer">
+        <span class="chip clay" style="margin-bottom:8px">Quartalsweise</span>
+        <p class="title-md serif">Snapshot — wo stehst du?</p>
+        <p class="body-md muted" style="margin-top:6px">Skill-Radar gegen vorherige Quartale — explizit kein Tages-Dashboard.</p>
+      </div>
+      <div class="card">
+        <p class="title-md serif">Nächster Meilenstein</p>
+        <p class="body-md" style="margin-top:6px;margin-bottom:16px">Identity-Check am Ende der Woche: ist dein Satz für dich näher rangerückt?</p>
+        <button class="btn tonal sm">Plan anpassen</button>
+      </div>
+    </section>
 
     <div>
       <h2 class="headline-md serif" style="margin-bottom:16px">8-Wochen-Übersicht</h2>
@@ -1020,6 +1047,179 @@
         starten mit Skills, die in allen drei Frameworks vorkommen — dort ist der Nachweis
         am dichtesten.
       </p>
+    </div>
+  </div>
+</section>
+
+<!-- ────────── IDENTITY STATEMENT ────────── -->
+<section id="identity">
+  <div class="stack-lg" style="max-width:720px">
+    <header>
+      <span class="chip primary">Zyklus starten</span>
+      <h1 class="display-md serif" style="margin-top:12px">In vier Wochen sagst du über dich …</h1>
+      <p class="body-lg muted" style="margin-top:12px">
+        Formuliere den Satz, den du am Ende des Zyklus über dich sagen können möchtest.
+        Identity statt Skill — empirisch der stärkere Anker für Verhaltensveränderung.
+      </p>
+    </header>
+
+    <div class="card">
+      <p class="title-md serif">Skill: Kritisches Denken</p>
+      <p class="body-md" style="font-style:italic;margin-top:6px">Behauptungen, Argumente und Annahmen aktiv prüfen — Evidenz, Logik und Perspektive einbeziehen, statt automatisch zuzustimmen oder zu widersprechen.</p>
+    </div>
+
+    <div class="card outlined">
+      <span class="mono label-sm" style="color:var(--primary)">SATZ</span>
+      <p class="title-lg serif" style="margin:6px 0 12px">„Ich bin jemand, der/die …"</p>
+      <textarea rows="3" placeholder="… vor einer Zustimmung kurz prüft, was die andere Person eigentlich meint." style="width:100%;border:1px solid var(--outline-variant);border-radius:8px;padding:12px;font-family:inherit;font-size:15px;background:var(--surface)"></textarea>
+      <p class="body-md muted" style="font-style:italic;margin-top:8px">Konkret, beobachtbar, in deinen Worten. Keine Floskel.</p>
+    </div>
+
+    <div class="card outlined">
+      <span class="mono label-sm" style="color:var(--primary)">DAUER</span>
+      <p class="title-lg serif" style="margin:6px 0 12px">Über wie viele Wochen?</p>
+      <select style="width:100%;border:1px solid var(--outline-variant);border-radius:8px;padding:12px;font-family:inherit;font-size:15px;background:var(--surface)">
+        <option>2 Wochen — Mini-Zyklus</option>
+        <option selected>4 Wochen — Standard</option>
+        <option>6 Wochen — für tiefere Skills</option>
+        <option>8 Wochen — vollständige Routinen-Veränderung</option>
+      </select>
+    </div>
+
+    <div class="flex">
+      <button class="btn filled" onclick="show('plan')">Zyklus starten</button>
+      <a onclick="show('skill')" class="body-md muted" style="text-decoration:underline;cursor:pointer">Zurück zur Skill-Seite</a>
+    </div>
+
+    <div class="card">
+      <p class="title-md serif">Was passiert dann?</p>
+      <ol style="padding-left:20px;margin-top:8px" class="body-md">
+        <li>Plan wird generiert — bewusst gemischt aus Mikro- und Embedded-Übungen, mit Reflexions-Slots.</li>
+        <li>Der AI-Coach kennt deinen Satz — und nutzt ihn in jeder Reflexion.</li>
+        <li>Am Ende des Zyklus formulierst du den Satz erneut: ist er für dich jetzt wahr?</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ────────── KOLLEGIALE FALLBERATUNG ────────── -->
+<section id="clinic">
+  <div class="stack-lg">
+    <header style="max-width:760px">
+      <span class="chip rust">Kollegiale Fallberatung</span>
+      <h1 class="display-md serif" style="margin-top:12px">Eine reale Situation gemeinsam strukturiert anschauen.</h1>
+      <p class="body-lg muted" style="margin-top:12px">
+        Sechs Phasen, 40 Minuten, eine klare Disziplin. Du bringst eine konkrete Situation —
+        und gehst raus mit einem nächsten Schritt, den DU formuliert hast (nicht jemand anders für dich).
+      </p>
+    </header>
+
+    <div class="grid grid-2">
+      <div class="card">
+        <span class="chip primary" style="align-self:flex-start">Solo-Modus</span>
+        <p class="title-lg serif" style="margin:8px 0">Mit dem AI-Coach durchgehen</p>
+        <p class="body-md">Der Coach übernimmt Moderation und Steel-Man-Beratung. Du gibst die Antworten, er hält die Disziplin — fragt erst, bevor er Hypothesen wagt.</p>
+        <button class="btn filled" style="margin-top:16px">Solo-Runde starten</button>
+      </div>
+      <div class="card">
+        <span class="chip clay" style="align-self:flex-start">Mit Peers (3–6 Personen)</span>
+        <p class="title-lg serif" style="margin:8px 0">Live mit Kolleg:innen</p>
+        <p class="body-md">Lade 2–5 Personen ein, ein:e Moderator:in führt durch die Phasen. Format wirkt am stärksten bei kollegialer Mischung — keine direkten Vorgesetzten in der Runde.</p>
+        <button class="btn tonal" style="margin-top:16px">Live-Runde planen</button>
+      </div>
+    </div>
+
+    <div>
+      <h2 class="headline-md serif" style="margin-bottom:12px">Das Protokoll</h2>
+      <div class="stack">
+        <div class="card outlined">
+          <div class="flex-between"><div><span class="mono label-sm" style="color:var(--primary)">01</span> <span class="title-md serif">Aufstellung</span></div><div class="flex"><span class="chip">Moderation</span><span class="chip clay">3 Min</span></div></div>
+          <p class="body-md muted" style="margin-top:6px">Rollen klären, Vertraulichkeit zusagen, Zeitrahmen festlegen.</p>
+        </div>
+        <div class="card outlined">
+          <div class="flex-between"><div><span class="mono label-sm" style="color:var(--primary)">02</span> <span class="title-md serif">Fallschilderung</span></div><div class="flex"><span class="chip">Fallgeber:in</span><span class="chip clay">5 Min</span></div></div>
+          <p class="body-md muted" style="margin-top:6px">Die Situation in deinen Worten erzählen — eine konkrete Szene, kein abstraktes Problem.</p>
+        </div>
+        <div class="card outlined">
+          <div class="flex-between"><div><span class="mono label-sm" style="color:var(--primary)">03</span> <span class="title-md serif">Verständnisfragen</span></div><div class="flex"><span class="chip">Berater:innen</span><span class="chip clay">5 Min</span></div></div>
+          <p class="body-md muted" style="margin-top:6px">Nur Fragen, keine Hypothesen, keine Lösungen.</p>
+        </div>
+        <div class="card outlined">
+          <div class="flex-between"><div><span class="mono label-sm" style="color:var(--primary)">04</span> <span class="title-md serif">Hypothesen</span></div><div class="flex"><span class="chip">Berater:innen</span><span class="chip clay">10 Min</span></div></div>
+          <p class="body-md muted" style="margin-top:6px">Was könnte da unter der Oberfläche laufen? Sammeln, nicht bewerten.</p>
+        </div>
+        <div class="card outlined">
+          <div class="flex-between"><div><span class="mono label-sm" style="color:var(--primary)">05</span> <span class="title-md serif">Ressourcen & Ideen</span></div><div class="flex"><span class="chip">Berater:innen</span><span class="chip clay">10 Min</span></div></div>
+          <p class="body-md muted" style="margin-top:6px">Konkrete Vorschläge nacheinander, ohne Diskussion.</p>
+        </div>
+        <div class="card outlined">
+          <div class="flex-between"><div><span class="mono label-sm" style="color:var(--primary)">06</span> <span class="title-md serif">Vereinbarung</span></div><div class="flex"><span class="chip">Fallgeber:in</span><span class="chip clay">5 Min</span></div></div>
+          <p class="body-md muted" style="margin-top:6px">EINEN konkreten nächsten Schritt wählen — und ihn jetzt aussprechen.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p class="title-lg serif">Warum die Phasen-Disziplin?</p>
+      <p class="body-md" style="margin-top:8px">
+        Ohne Phasen kippt das Format reflexhaft in „lass mich dir Ratschläge geben". Die ersten zehn Minuten sind explizit ratsfreie Zone — Fallschilderung + Verständnisfragen. Erst danach kommen Hypothesen und Lösungen.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ────────── QUARTALS-SNAPSHOT ────────── -->
+<section id="snapshot">
+  <div class="stack-lg">
+    <header style="max-width:760px">
+      <span class="chip clay">Quartals-Snapshot</span>
+      <h1 class="display-md serif" style="margin-top:12px">Wo stehst du, gegenüber vor drei Monaten?</h1>
+      <p class="body-lg muted" style="margin-top:12px">
+        Eine ruhige Übersicht — nicht für jeden Tag, sondern für den Moment, in dem du dich ehrlich fragst „bewegt sich was?". Faded ist dein letzter Snapshot, voll deine aktuelle Selbstpositionierung.
+      </p>
+    </header>
+
+    <div class="grid grid-2" style="align-items:center">
+      <div style="display:flex;justify-content:center">
+        <svg width="320" height="320" viewBox="0 0 320 320" role="img" aria-label="Skill-Radar">
+          <!-- Rings -->
+          <path d="M160,72 L237.6,206.4 L82.4,206.4 Z" fill="none" stroke="#E0D1B4"/>
+          <path d="M160,116 L198.8,183.2 L121.2,183.2 Z" fill="none" stroke="#E0D1B4"/>
+          <path d="M160,138 L179.4,171.6 L140.6,171.6 Z" fill="none" stroke="#E0D1B4"/>
+          <path d="M160,160 L160,160 L160,160 Z" fill="none" stroke="#E0D1B4"/>
+          <!-- Spokes -->
+          <line x1="160" y1="160" x2="160" y2="72" stroke="#E0D1B4"/>
+          <line x1="160" y1="160" x2="237.6" y2="206.4" stroke="#E0D1B4"/>
+          <line x1="160" y1="160" x2="82.4" y2="206.4" stroke="#E0D1B4"/>
+          <!-- Previous quarter -->
+          <path d="M160,116 L198.8,183.2 L140.6,171.6 Z" fill="rgba(166,122,88,0.10)" stroke="#A67A58" stroke-dasharray="4 4" stroke-width="1.5"/>
+          <!-- Current quarter -->
+          <path d="M160,116 L237.6,206.4 L121.2,183.2 Z" fill="rgba(204,120,92,0.18)" stroke="#CC785C" stroke-width="2"/>
+          <!-- Labels -->
+          <text x="160" y="50" text-anchor="middle" font-family="Inter" font-size="12" fill="#262521">Kritisches Denken</text>
+          <text x="265" y="220" text-anchor="middle" font-family="Inter" font-size="12" fill="#262521">Resilienz</text>
+          <text x="55" y="220" text-anchor="middle" font-family="Inter" font-size="12" fill="#262521">AI Literacy</text>
+        </svg>
+      </div>
+      <div class="stack">
+        <div class="card">
+          <p class="title-md serif">Was du hier siehst</p>
+          <p class="body-md" style="margin-top:6px">Jede Achse ein Skill, jede Ringstufe eine Level-Position (L1 — gehört, L4 — kann es anderen beibringen). Faded = vor 3 Monaten, voll = heute.</p>
+        </div>
+        <div class="card outlined">
+          <p class="title-md serif">Was du hier NICHT siehst</p>
+          <p class="body-md" style="margin-top:6px">Eine Punktzahl. Ein Ranking. Einen Hinweis, ob du „besser" bist als jemand anders. Das wäre die falsche Frage.</p>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h2 class="headline-md serif" style="margin-bottom:12px">Was die Position trägt</h2>
+      <div class="grid grid-3">
+        <div class="card"><span class="mono label-sm" style="color:var(--primary)">Q3 2026</span><p class="display-md serif" style="margin-top:6px">14</p><p class="body-md muted">Artefakte erstellt</p></div>
+        <div class="card"><span class="mono label-sm" style="color:var(--primary)">Q3 2026</span><p class="display-md serif" style="margin-top:6px">2</p><p class="body-md muted">Zyklen abgeschlossen</p></div>
+        <div class="card"><span class="mono label-sm" style="color:var(--primary)">Q3 2026</span><p class="display-md serif" style="margin-top:6px">1</p><p class="body-md muted">Fallberatung geöffnet</p></div>
+      </div>
     </div>
   </div>
 </section>
