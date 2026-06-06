@@ -79,7 +79,11 @@ export async function POST(
     data: {
       circleId,
       scheduledAt: toMiddayUtc(parsed.data.scheduledAt),
-      completedAt: new Date(),
+      // The MVP logs meetings after the fact; we don't capture the actual end
+      // time. completedAt mirrors scheduledAt so future "when did this happen"
+      // queries (streaks, cadence health) use the meeting date rather than the
+      // moment the user got around to filling out the form.
+      completedAt: toMiddayUtc(parsed.data.scheduledAt),
       focusMemberId: parsed.data.focusMemberId,
       focusUserId: parsed.data.focusUserId,
       keyQuestion: parsed.data.keyQuestion,

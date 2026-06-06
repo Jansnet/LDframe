@@ -39,25 +39,32 @@ interface SessionInfo {
 }
 
 async function loadSession(): Promise<SessionInfo> {
-  try {
-    const store = await cookies();
-    const raw = store.get(SESSION_COOKIE)?.value;
-    const userId = parseSessionCookie(raw);
-    if (!userId) return { loggedIn: false };
-    const user = await prisma.user.findUnique({
+  // cookies() and parseSessionCookie are deterministic and shouldn't throw on
+  // valid runtime input — let runtime errors surface (they're a bug). Only the
+  // DB lookup is wrapped, and even there we re-throw if the error isn't the
+  // expected "user gone but cookie still valid" case.
+  const store = await cookies();
+  const raw = store.get(SESSION_COOKIE)?.value;
+  const userId = parseSessionCookie(raw);
+  if (!userId) return { loggedIn: false };
+
+  const user = await prisma.user
+    .findUnique({
       where: { id: userId },
       select: { name: true, email: true, role: true },
+    })
+    .catch((err) => {
+      // eslint-disable-next-line no-console
+      console.error("loadSession: user lookup failed", err);
+      return null;  // surface as logged-out rather than crashing the shell
     });
-    if (!user) return { loggedIn: false };
-    return {
-      loggedIn: true,
-      name: user.name ?? undefined,
-      email: user.email,
-      role: user.role,
-    };
-  } catch {
-    return { loggedIn: false };
-  }
+  if (!user) return { loggedIn: false };
+  return {
+    loggedIn: true,
+    name: user.name ?? undefined,
+    email: user.email,
+    role: user.role,
+  };
 }
 
 function TopBar({ session }: { session: SessionInfo }) {

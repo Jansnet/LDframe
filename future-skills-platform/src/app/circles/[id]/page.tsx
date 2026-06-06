@@ -11,24 +11,28 @@ export const dynamic = "force-dynamic";
 export default async function CirclePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const userId = await getSessionUserId().catch(() => "demo");
+  const me = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { organizationId: true },
+  });
 
-  const circle = await prisma.learningCircle.findUnique({
-    where: { id },
-    include: {
-      members: { include: { user: { select: { id: true, name: true, email: true } } } },
-      meetings: {
-        orderBy: { scheduledAt: "desc" },
+  const circle = me
+    ? await prisma.learningCircle.findFirst({
+        where: { id, organizationId: me.organizationId },
         include: {
-          commitments: {
+          members: { include: { user: { select: { id: true, name: true, email: true } } } },
+          meetings: {
+            orderBy: { scheduledAt: "desc" },
             include: {
-              user: { select: { name: true, email: true } },
+              commitments: {
+                include: { user: { select: { name: true, email: true } } },
+              },
+              focusUser: { select: { name: true, email: true } },
             },
           },
-          focusUser: { select: { name: true, email: true } },
         },
-      },
-    },
-  });
+      })
+    : null;
   if (!circle) notFound();
 
   const myMembership = circle.members.find((m) => m.userId === userId);

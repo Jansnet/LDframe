@@ -4,7 +4,6 @@ import { Chip } from "@/components/ui/Chip";
 import { Card } from "@/components/ui/Card";
 import {
   atlasByCategory,
-  authoredSlugs,
   publishedSlugs,
   CATEGORY_META,
   CATEGORY_ORDER,
@@ -13,19 +12,19 @@ import {
 /**
  * Atlas / Skill-Map — the home view.
  *
- * Five category panels, the 30 Future Skills 2030 grouped by category.
- * Every skill is clickable: published skills (3 currently) link to a full
- * skill page; stub skills show the L1-L4 anchors and a "Übungen folgen"
- * notice. Skills marked as stubs are tagged here as „Anker da" so the
- * difference is visible.
+ * Five category panels, the Future Skills 2030 grouped by category. Every
+ * skill is clickable: published skills link to the full skill cycle; stub
+ * skills show the L1–L4 anchors on a positioning card and a "Übungen folgen"
+ * notice. Stubs are rendered with a dashed chip + "Anker" tag so the
+ * difference stays visible.
  */
 export default function HomePage() {
   const grouped = atlasByCategory();
-  const authored = authoredSlugs();
   const published = publishedSlugs();
 
   const totalPublished = published.size;
   const totalSkills = CATEGORY_ORDER.reduce((sum, c) => sum + grouped[c].length, 0);
+  const stubCount = totalSkills - totalPublished;
 
   return (
     <div className="space-y-12">
@@ -47,7 +46,7 @@ export default function HomePage() {
             Erst die Tour sehen
           </Link>
           <Chip tone="neutral" className="ml-auto text-label-sm">
-            {totalPublished} von {totalSkills} voll ausgearbeitet · {authored.size - published.size} mit Anker
+            {totalPublished} von {totalSkills} voll ausgearbeitet · {stubCount} mit Anker
           </Chip>
         </div>
       </section>

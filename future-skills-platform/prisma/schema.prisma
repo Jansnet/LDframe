@@ -27,6 +27,7 @@ model Organization {
   teams         Team[]
   customSkills  CustomSkill[]
   customExercises CustomExercise[]
+  learningCircles LearningCircle[]
 }
 
 model User {
@@ -398,6 +399,8 @@ model CaseClinicParticipant {
 model LearningCircle {
   id               String   @id @default(cuid())
   name             String
+  organizationId   String
+  organization     Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   status           String   @default("active") // forming | active | completed | dissolved
   cycleLengthWeeks Int      @default(8)
   cadence          String   @default("weekly")
@@ -406,6 +409,8 @@ model LearningCircle {
 
   members  CircleMember[]
   meetings CircleMeeting[]
+
+  @@index([organizationId])
 }
 
 model CircleMember {

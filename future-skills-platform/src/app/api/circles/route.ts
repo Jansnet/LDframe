@@ -45,6 +45,7 @@ export async function POST(req: NextRequest) {
   const circle = await prisma.learningCircle.create({
     data: {
       name: parsed.data.name,
+      organizationId: me.organizationId,
       status: "active",
       members: {
         create: users.map((u) => ({

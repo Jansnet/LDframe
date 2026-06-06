@@ -16,21 +16,34 @@ export const dynamic = "force-dynamic";
  */
 export default async function CirclesPage() {
   const userId = await getSessionUserId().catch(() => "demo");
+  const me = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { organizationId: true },
+  });
 
-  const memberships = await prisma.circleMember
-    .findMany({
-      where: { userId, status: "active" },
-      include: {
-        circle: {
-          include: {
-            members: { include: { user: { select: { name: true, email: true } } } },
-            meetings: { orderBy: { scheduledAt: "desc" }, take: 1 },
+  // Filter by the requester's current org — if they switched orgs, old
+  // memberships in the prior org are hidden defensively (the corresponding
+  // circle row is still owned by the old org).
+  const memberships = me
+    ? await prisma.circleMember
+        .findMany({
+          where: {
+            userId,
+            status: "active",
+            circle: { organizationId: me.organizationId },
           },
-        },
-      },
-      orderBy: { joinedAt: "desc" },
-    })
-    .catch(() => []);
+          include: {
+            circle: {
+              include: {
+                members: { include: { user: { select: { name: true, email: true } } } },
+                meetings: { orderBy: { scheduledAt: "desc" }, take: 1 },
+              },
+            },
+          },
+          orderBy: { joinedAt: "desc" },
+        })
+        .catch(() => [])
+    : [];
 
   return (
     <div className="space-y-10">
