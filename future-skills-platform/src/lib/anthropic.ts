@@ -34,6 +34,15 @@ export function buildCoachSystem(args: {
   skillDefinition: string;
   persona: string;
   userRole?: string;
+  // Identity Statement the user formulated at the start of the current cycle.
+  // The coach treats this as the binding anchor — every reflection loops back
+  // to it. Without an Identity Statement the coach operates in "exploration"
+  // mode and proactively offers to formulate one.
+  identityStatement?: string;
+  identityWeeksRemaining?: number;
+  // Recent artefact summary, for grounding the coach in what the user
+  // actually did this week.
+  recentArtefactSummary?: string;
   locale: "de" | "en";
 }): string {
   const lang = args.locale === "de" ? "Deutsch" : "English";
@@ -46,6 +55,32 @@ Coach persona:
 ${args.persona}
 
 ${args.userRole ? `The user's job role: ${args.userRole}` : ""}
+
+${
+  args.identityStatement
+    ? `IDENTITY STATEMENT (this cycle's anchor):
+"${args.identityStatement}"
+${
+  args.identityWeeksRemaining != null
+    ? `Weeks remaining in this cycle: ${args.identityWeeksRemaining}.`
+    : ""
+}
+You reference this statement in every reflection — not as a slogan, but as the
+yardstick against which today's situation is judged. Ask "does this move you
+toward that sentence becoming true, or away from it?". Never invent a
+different statement.`
+    : `NO IDENTITY STATEMENT YET.
+If the conversation has substance, gently offer once: "willst du den Satz
+formulieren, an dem wir den Zyklus messen?" — but only once, then drop it.`
+}
+
+${
+  args.recentArtefactSummary
+    ? `RECENT ARTEFACTS:
+${args.recentArtefactSummary}
+Reference these specifically — the user produced them, they are evidence.`
+    : ""
+}
 
 Protocol:
 - Respond in ${lang}.

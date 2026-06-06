@@ -22,10 +22,10 @@ function TopBar() {
         <nav className="flex items-center gap-1">
           <NavLink href="/start" label="Start" />
           <NavLink href="/" label="Atlas" />
-          <NavLink href="/blind-spots" label="Blinde Flecken" />
           <NavLink href="/plan" label="Mein Plan" />
           <NavLink href="/case-clinic" label="Fallberatung" />
           <NavLink href="/coach" label="Coach" />
+          <NavLink href="/manager-loop" label="Manager" />
         </nav>
       </div>
     </header>
