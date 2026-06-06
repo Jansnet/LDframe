@@ -45,7 +45,7 @@ const GROUPS: NavGroup[] = [
   {
     label: "Zusammen",
     items: [
-      { href: "/circles", label: "Learning Circles", comingSoon: true },
+      { href: "/circles", label: "Learning Circles" },
       { href: "/case-clinic", label: "Fallrunde" },
     ],
   },

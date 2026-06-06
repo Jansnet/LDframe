@@ -63,6 +63,9 @@ model User {
   ownedCaseClinics       CaseClinic[] @relation("CaseClinicOwner")
   facilitatedCaseClinics CaseClinic[] @relation("CaseClinicFacilitator")
   caseClinicParticipations CaseClinicParticipant[]
+  circleMemberships      CircleMember[]
+  focusedCircleMeetings  CircleMeeting[]
+  circleCommitments      CircleCommitment[]
 
   @@index([organizationId])
 }
@@ -384,6 +387,82 @@ model CaseClinicParticipant {
   user   User       @relation(fields: [userId],   references: [id], onDelete: Cascade)
 
   @@unique([clinicId, userId])
+}
+
+// ── Learning Circle ──
+// 3-5 colleagues meet weekly for 30 min over a quarter. Each member works on
+// their own IdentityStatement (potentially on different skills). Synthesis of
+// Action Learning, Troika Consulting, Balint protocols + EO Forum commitments.
+// MVP is manual: members log meetings themselves, no live timer runtime yet.
+
+model LearningCircle {
+  id               String   @id @default(cuid())
+  name             String
+  status           String   @default("active") // forming | active | completed | dissolved
+  cycleLengthWeeks Int      @default(8)
+  cadence          String   @default("weekly")
+  durationMinutes  Int      @default(30)
+  createdAt        DateTime @default(now())
+
+  members  CircleMember[]
+  meetings CircleMeeting[]
+}
+
+model CircleMember {
+  id                  String  @id @default(cuid())
+  circleId            String
+  userId              String
+  identityStatementId String?
+  role                String  @default("member") // member | facilitator
+  status              String  @default("active") // active | alumni | paused
+  consecutiveMisses   Int     @default(0)
+  focusTurnsTaken     Int     @default(0)
+  joinedAt            DateTime @default(now())
+  leftAt              DateTime?
+
+  circle LearningCircle @relation(fields: [circleId], references: [id], onDelete: Cascade)
+  user   User           @relation(fields: [userId],   references: [id], onDelete: Cascade)
+  commitments CircleCommitment[]
+
+  @@unique([circleId, userId])
+  @@index([circleId, status])
+}
+
+model CircleMeeting {
+  id                       String   @id @default(cuid())
+  circleId                 String
+  scheduledAt              DateTime
+  completedAt              DateTime?
+  focusMemberId            String?  // CircleMember.id of the week's focus person
+  focusUserId              String?  // denormalized for easy querying
+  keyQuestion              String?  // pre-written 1-sentence question
+  harvestStatement         String?  // what the focus person will do
+  notes                    String?  // free-text observations / clarifying Qs
+
+  circle      LearningCircle @relation(fields: [circleId], references: [id], onDelete: Cascade)
+  focusUser   User?          @relation(fields: [focusUserId], references: [id], onDelete: SetNull)
+  commitments CircleCommitment[]
+
+  @@index([circleId, scheduledAt])
+}
+
+model CircleCommitment {
+  id                  String   @id @default(cuid())
+  meetingId           String
+  memberId            String   // CircleMember.id
+  userId              String   // denormalized for easy "my commitments" queries
+  identityStatementId String?
+  ifClause            String
+  thenClause          String
+  dueBy               DateTime
+  status              String   @default("open") // open | kept | missed | reframed
+  createdAt           DateTime @default(now())
+
+  meeting CircleMeeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  member  CircleMember  @relation(fields: [memberId],  references: [id], onDelete: Cascade)
+  user    User          @relation(fields: [userId],    references: [id], onDelete: Cascade)
+
+  @@index([userId, status, dueBy])
 }
 
 // ── Magic-link verification ──
