@@ -39,13 +39,17 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Look up the active Identity Statement + recent artefacts for cycle-aware coaching.
-  const [identity, recentArtefacts] = await Promise.all([
+  // Look up the active Identity Statement, current self-positioning level,
+  // and recent artefacts — all for cycle- and level-aware coaching.
+  const [identity, level, recentArtefacts] = await Promise.all([
     prisma.identityStatement
       .findFirst({
         where: { userId: effectiveUserId, skillSlug, fulfilled: false, closedAt: null },
         orderBy: { startedAt: "desc" },
       })
+      .catch(() => null),
+    prisma.skillLevel
+      .findUnique({ where: { userId_skillSlug: { userId: effectiveUserId, skillSlug } } })
       .catch(() => null),
     prisma.artefact
       .findMany({
@@ -80,6 +84,9 @@ export async function POST(req: NextRequest) {
     skillName: t(skill.name, locale),
     skillDefinition: t(skill.definition, locale),
     persona: t(skill.coach.persona, locale) + "\n\n" + t(skill.coach.systemPrompt, locale),
+    levelAnchors: skill.levelAnchors,
+    currentLevel: level?.level,
+    currentLevelRationale: level?.rationale ?? undefined,
     userRole,
     identityStatement: identity?.statement,
     identityWeeksRemaining,
