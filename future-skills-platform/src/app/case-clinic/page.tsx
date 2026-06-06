@@ -55,9 +55,14 @@ export default function CaseClinicPage() {
               Vorgesetzten in der Runde.
             </p>
           </CardBody>
-          <Link href="/case-clinic/new">
-            <Button variant="tonal">Live-Runde planen</Button>
-          </Link>
+          <div className="flex gap-2">
+            <Link href="/case-clinic/new">
+              <Button variant="tonal">Live-Runde anlegen</Button>
+            </Link>
+            <Link href="/case-clinic/join">
+              <Button variant="text">Mit Code beitreten</Button>
+            </Link>
+          </div>
         </Card>
       </section>
 

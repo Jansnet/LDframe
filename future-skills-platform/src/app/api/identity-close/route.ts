@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { awardBadgeIfFirst } from "@/lib/gentle-gamification";
+import { getSessionUserId } from "@/lib/auth";
 
 export const runtime = "nodejs";
 
@@ -17,7 +18,6 @@ export const runtime = "nodejs";
  * collapse the whole cycle into the very anti-pattern we replaced.
  */
 const Body = z.object({
-  userId: z.string().optional(),
   identityStatementId: z.string(),
   refinedStatement: z.string().min(10),
   fulfilled: z.boolean(),
@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) {
     return NextResponse.json({ error: "invalid_body" }, { status: 400 });
   }
-  const userId = parsed.data.userId ?? "demo";
+  const userId = await getSessionUserId();
   const { identityStatementId, refinedStatement, fulfilled, situations } = parsed.data;
 
   const original = await prisma.identityStatement.findUnique({

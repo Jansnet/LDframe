@@ -357,6 +357,9 @@ model CaseClinic {
   startedAt     DateTime?
   endedAt       DateTime?
   isSolo        Boolean  @default(false)
+  // Short, shareable code so peers can join without an invite system.
+  joinCode      String?  @unique
+  maxParticipants Int    @default(6)
   createdAt     DateTime @default(now())
 
   caseOwner    User @relation("CaseClinicOwner",    fields: [caseOwnerId],   references: [id], onDelete: Cascade)

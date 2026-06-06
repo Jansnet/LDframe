@@ -3,12 +3,12 @@ import { z } from "zod";
 import { getSkill } from "@/content/registry";
 import { getAnthropic, COACH_MODEL, buildCoachSystem, systemPromptCacheable } from "@/lib/anthropic";
 import { prisma } from "@/lib/db";
+import { getSessionUserId } from "@/lib/auth";
 import { t } from "@/lib/i18n";
 
 export const runtime = "nodejs";
 
 const Body = z.object({
-  userId: z.string().optional(),
   skillSlug: z.string(),
   messages: z.array(
     z.object({
@@ -25,7 +25,8 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) {
     return NextResponse.json({ error: "invalid_body", details: parsed.error.format() }, { status: 400 });
   }
-  const { userId, skillSlug, messages, userRole, locale } = parsed.data;
+  const { skillSlug, messages, userRole, locale } = parsed.data;
+  const effectiveUserId = await getSessionUserId();
 
   const skill = getSkill(skillSlug);
   if (!skill) return NextResponse.json({ error: "skill_not_found" }, { status: 404 });
@@ -39,7 +40,6 @@ export async function POST(req: NextRequest) {
   }
 
   // Look up the active Identity Statement + recent artefacts for cycle-aware coaching.
-  const effectiveUserId = userId ?? "demo";
   const [identity, recentArtefacts] = await Promise.all([
     prisma.identityStatement
       .findFirst({

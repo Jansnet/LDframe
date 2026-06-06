@@ -29,12 +29,10 @@ export default function StartPage() {
     setLoading(true);
     setError(null);
     try {
-      // userId is wired up via auth in production; here we use a placeholder for the demo flow.
       const res = await fetch("/api/gap-engine", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          userId: "demo",
           situation: situation.trim(),
           intent: intent.trim(),
           locale: "de",

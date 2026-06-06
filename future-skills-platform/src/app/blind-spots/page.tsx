@@ -41,22 +41,32 @@ export default function BlindSpotsPage() {
         {skills.map((s) => {
           const note = blindspotNotes[s.slug];
           return (
-            <Link key={s.slug} href={`/skills/${s.slug}/discover`}>
-              <Card variant="outlined" interactive className="h-full flex flex-col">
-                <div className="flex items-baseline justify-between mb-3">
-                  <Chip tone="clay">{s.category}</Chip>
-                  <span className="font-mono text-label-sm text-on-surface-muted">noch nicht eingeordnet</span>
-                </div>
+            <Card key={s.slug} variant="outlined" className="h-full flex flex-col">
+              <div className="flex items-baseline justify-between mb-3">
+                <Chip tone="clay">{s.category}</Chip>
+                <span className="font-mono text-label-sm text-on-surface-muted">
+                  noch nicht eingeordnet
+                </span>
+              </div>
+              <Link href={`/skills/${s.slug}`} className="block">
                 <CardTitle>{t(s.name)}</CardTitle>
-                <CardBody className="flex-1">
-                  {note && (
-                    <p className="italic text-on-surface mb-3">„{note}"</p>
-                  )}
-                  <p className="text-body-md">{t(s.definition)}</p>
-                </CardBody>
-                <div className="mt-4 text-label-sm text-primary">Reinschauen →</div>
-              </Card>
-            </Link>
+              </Link>
+              <CardBody className="flex-1">
+                {note && <p className="italic text-on-surface mb-3">„{note}"</p>}
+                <p className="text-body-md">{t(s.definition)}</p>
+              </CardBody>
+              <div className="mt-4 flex items-center justify-between text-label-sm">
+                <Link href={`/skills/${s.slug}`} className="text-primary underline">
+                  Zur Skill-Seite →
+                </Link>
+                <Link
+                  href={`/skills/${s.slug}/discover`}
+                  className="text-on-surface-muted underline"
+                >
+                  Erst tiefer schauen
+                </Link>
+              </div>
+            </Card>
           );
         })}
       </section>

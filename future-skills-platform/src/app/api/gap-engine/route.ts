@@ -3,6 +3,7 @@ import { z } from "zod";
 import { listSkills } from "@/content/registry";
 import { getAnthropic, COACH_MODEL } from "@/lib/anthropic";
 import { prisma } from "@/lib/db";
+import { getSessionUserId } from "@/lib/auth";
 import { t, type Locale } from "@/lib/i18n";
 
 export const runtime = "nodejs";
@@ -20,7 +21,6 @@ export const runtime = "nodejs";
  */
 
 const Body = z.object({
-  userId: z.string(),
   // Two free-text answers.
   situation: z.string().min(3),
   intent: z.string().min(3),
@@ -38,20 +38,24 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) {
     return NextResponse.json({ error: "invalid_body" }, { status: 400 });
   }
-  const { userId, situation, intent, locale } = parsed.data;
-  const user = await prisma.user.findUnique({ where: { id: userId } });
-  if (!user) return NextResponse.json({ error: "user_not_found" }, { status: 404 });
+  const { situation, intent, locale } = parsed.data;
+  const userId = await getSessionUserId();
+  const user = await prisma.user.findUnique({ where: { id: userId } }).catch(() => null);
+  const role = user?.roleText ?? "";
 
   const skills = listSkills();
-  const suggestions = await classify({ situation, intent, locale, role: user.roleText ?? "", skills });
+  const suggestions = await classify({ situation, intent, locale, role, skills });
 
-  await prisma.gapClassification.create({
-    data: {
-      userId,
-      questions: { situation, intent },
-      suggestions: suggestions as object,
-    },
-  });
+  // Persist for logged-in users — skip silently in demo mode.
+  if (user) {
+    await prisma.gapClassification.create({
+      data: {
+        userId,
+        questions: { situation, intent },
+        suggestions: suggestions as object,
+      },
+    });
+  }
 
   return NextResponse.json({ suggestions });
 }

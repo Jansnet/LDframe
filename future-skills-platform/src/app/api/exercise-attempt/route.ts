@@ -3,6 +3,7 @@ import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { getSkill } from "@/content/registry";
 import { awardBadgeIfFirst, bumpStreak } from "@/lib/gentle-gamification";
+import { getSessionUserId } from "@/lib/auth";
 
 export const runtime = "nodejs";
 
@@ -19,7 +20,6 @@ export const runtime = "nodejs";
  */
 
 const Body = z.object({
-  userId: z.string().optional(),
   skillSlug: z.string(),
   exerciseId: z.string(),
   reflection: z.string().optional(),
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
       { status: 400 },
     );
   }
-  const userId = parsed.data.userId ?? "demo";
+  const userId = await getSessionUserId();
   const { skillSlug, exerciseId, reflection, artefact } = parsed.data;
   const skill = getSkill(skillSlug);
   if (!skill) return NextResponse.json({ error: "skill_not_found" }, { status: 404 });

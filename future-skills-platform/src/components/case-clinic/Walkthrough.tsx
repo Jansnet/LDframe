@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardTitle, CardBody } from "@/components/ui/Card";
 import { Chip } from "@/components/ui/Chip";
 import { Button } from "@/components/ui/Button";
@@ -9,9 +9,13 @@ import { PHASES, type CasePhase } from "@/lib/case-clinic";
 /**
  * Interactive walkthrough for a single case clinic session.
  *
- * Holds the current phase locally + a notes dict, posts {action:"advance"}
- * to /api/case-clinic on each phase transition. Solo mode shows an
- * AI-coach bubble per phase with phase-appropriate facilitation copy.
+ * Two modes:
+ *   - Solo / facilitator-led: drives phase locally, controls advancement.
+ *   - Live participant: polls every 4s for phase changes from the facilitator.
+ *
+ * Polling instead of WebSockets is a deliberate trade-off: the format runs
+ * for ~40 minutes, phase transitions are infrequent, and polling fits any
+ * hosting target (including air-gapped serverless) without extra infra.
  */
 interface Props {
   clinicId: string;
@@ -19,6 +23,12 @@ interface Props {
   caseText: string;
   keyQuestion?: string;
   initialPhase?: CasePhase;
+  // When true, render the AI-coach moderation hints and the advance button.
+  // For consultants in a live session this is false — they see the phase
+  // and prompts but cannot drive transitions.
+  youAreFacilitator?: boolean;
+  // When true, poll the server for phase updates.
+  livePolling?: boolean;
 }
 
 export function CaseClinicWalkthrough({
@@ -27,10 +37,34 @@ export function CaseClinicWalkthrough({
   caseText,
   keyQuestion,
   initialPhase = "setup",
+  youAreFacilitator = true,
+  livePolling = false,
 }: Props) {
   const [phase, setPhase] = useState<CasePhase>(initialPhase);
   const [notes, setNotes] = useState<Record<string, string>>({});
   const [advancing, setAdvancing] = useState(false);
+
+  // Poll for live updates.
+  useEffect(() => {
+    if (!livePolling) return;
+    const id = setInterval(async () => {
+      try {
+        const res = await fetch("/api/case-clinic", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "state", clinicId }),
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.clinic?.phase && data.clinic.phase !== phase) {
+          setPhase(data.clinic.phase as CasePhase);
+        }
+      } catch {
+        /* swallow transient failures */
+      }
+    }, 4000);
+    return () => clearInterval(id);
+  }, [clinicId, livePolling, phase]);
 
   const currentIndex = PHASES.findIndex((p) => p.phase === phase);
   const def = PHASES[currentIndex];
@@ -101,9 +135,11 @@ export function CaseClinicWalkthrough({
         </div>
         <p className="text-body-md text-on-surface-muted">{def.description}</p>
 
-        {isSolo && (
+        {(isSolo || youAreFacilitator) && (
           <div className="bg-primary-container rounded-sm p-4 space-y-2">
-            <span className="font-mono text-label-sm text-primary-on-container">AI-MODERATION</span>
+            <span className="font-mono text-label-sm text-primary-on-container">
+              {isSolo ? "AI-MODERATION" : "MODERATIONS-LEITFRAGEN"}
+            </span>
             <ul className="text-body-md text-primary-on-container space-y-1 list-disc pl-5">
               {def.prompts.map((p) => (
                 <li key={p}>{p}</li>
@@ -112,20 +148,27 @@ export function CaseClinicWalkthrough({
           </div>
         )}
 
-        <label className="block">
-          <span className="block text-label-md text-on-surface mb-1">Notizen / Antworten</span>
-          <textarea
-            value={notes[phase] ?? ""}
-            onChange={(e) => setNotes({ ...notes, [phase]: e.target.value })}
-            rows={4}
-            placeholder="Halte fest, was in dieser Phase passiert ist."
-            className="w-full rounded-sm border border-outline-variant bg-surface p-3 text-body-md focus:outline-none focus:border-primary"
-          />
-        </label>
-
-        <Button onClick={advance} disabled={advancing} variant="filled">
-          {advancing ? "Übergebe …" : "Nächste Phase"}
-        </Button>
+        {youAreFacilitator ? (
+          <>
+            <label className="block">
+              <span className="block text-label-md text-on-surface mb-1">Notizen / Antworten</span>
+              <textarea
+                value={notes[phase] ?? ""}
+                onChange={(e) => setNotes({ ...notes, [phase]: e.target.value })}
+                rows={4}
+                placeholder="Halte fest, was in dieser Phase passiert ist."
+                className="w-full rounded-sm border border-outline-variant bg-surface p-3 text-body-md focus:outline-none focus:border-primary"
+              />
+            </label>
+            <Button onClick={advance} disabled={advancing} variant="filled">
+              {advancing ? "Übergebe …" : "Nächste Phase"}
+            </Button>
+          </>
+        ) : (
+          <p className="text-body-md text-on-surface-muted italic">
+            Du beobachtest. Die Moderation entscheidet, wann es weitergeht.
+          </p>
+        )}
       </Card>
     </div>
   );

@@ -26,6 +26,7 @@ function TopBar() {
           <NavLink href="/case-clinic" label="Fallberatung" />
           <NavLink href="/coach" label="Coach" />
           <NavLink href="/manager-loop" label="Manager" />
+          <NavLink href="/login" label="Sign-in" />
         </nav>
       </div>
     </header>

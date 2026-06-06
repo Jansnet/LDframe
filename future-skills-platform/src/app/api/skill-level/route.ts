@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
+import { getSessionUserId } from "@/lib/auth";
 
 export const runtime = "nodejs";
 
 const Body = z.object({
-  userId: z.string().optional(), // wired through auth in production
   skillSlug: z.string(),
   level: z.coerce.number().int().min(1).max(4),
   rationale: z.string().optional(),
@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) {
     return NextResponse.json({ error: "invalid_body" }, { status: 400 });
   }
-  const userId = parsed.data.userId ?? "demo";
+  const userId = await getSessionUserId();
   const { skillSlug, level, rationale } = parsed.data;
 
   await prisma.skillLevel.upsert({
