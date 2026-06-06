@@ -3,21 +3,25 @@ import type { ReactNode } from "react";
 import { cookies } from "next/headers";
 import { parseSessionCookie, SESSION_COOKIE } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { Sidebar } from "./Sidebar";
 
 /**
  * AppShell — async server component so the nav reflects the session.
  *
- * Reads the session cookie directly (no API roundtrip), looks up minimal
- * user data (name, role) and passes it to the topbar. Logged-out users see
- * "Sign-in"; logged-in users see their name + an admin link if applicable.
+ * Layout: persistent Sidebar (left, desktop) + slim TopBar with breadcrumb +
+ * account menu + main content. The Coach floating pane is mounted via a
+ * separate component the pages opt into.
  */
 export async function AppShell({ children }: { children: ReactNode }) {
   const session = await loadSession();
   return (
-    <div className="min-h-screen flex flex-col">
-      <TopBar session={session} />
-      <main className="flex-1 mx-auto w-full max-w-6xl px-6 py-10">{children}</main>
-      <Footer />
+    <div className="min-h-screen flex flex-col md:flex-row">
+      <Sidebar role={session.role} />
+      <div className="flex-1 flex flex-col min-w-0">
+        <TopBar session={session} />
+        <main className="flex-1 mx-auto w-full max-w-5xl px-6 py-10">{children}</main>
+        <Footer />
+      </div>
     </div>
   );
 }
@@ -54,34 +58,26 @@ async function loadSession(): Promise<SessionInfo> {
 function TopBar({ session }: { session: SessionInfo }) {
   return (
     <header className="sticky top-0 z-40 bg-surface/80 backdrop-blur border-b border-outline-variant">
-      <div className="mx-auto max-w-6xl px-6 h-14 flex items-center justify-between">
-        <Link href="/" className="font-serif text-title-lg text-on-surface tracking-tight">
+      <div className="mx-auto max-w-5xl px-6 h-14 flex items-center justify-between gap-4">
+        {/* Mobile: show logo here since sidebar is hidden. Desktop: empty space for future breadcrumbs. */}
+        <Link
+          href="/"
+          className="md:hidden font-serif text-title-lg text-on-surface tracking-tight"
+        >
           Skill Hacker
           <span className="ml-2 font-mono text-label-sm text-primary">v0.1</span>
         </Link>
+        <div className="hidden md:block" />
         <nav className="flex items-center gap-1">
-          <NavLink href="/start" label="Start" />
-          <NavLink href="/" label="Atlas" />
-          <NavLink href="/plan" label="Mein Plan" />
-          <NavLink href="/case-clinic" label="Fallberatung" />
-          <NavLink href="/coach" label="Coach" />
-          <NavLink href="/manager-loop" label="Manager" />
-          {session.role === "admin" && <NavLink href="/admin/org" label="Admin" />}
-          {session.loggedIn ? <AccountMenu session={session} /> : <NavLink href="/login" label="Sign-in" />}
+          {session.loggedIn ? <AccountMenu session={session} /> : <Link
+            href="/login"
+            className="state-layer rounded-full px-4 h-9 inline-flex items-center text-label-lg text-on-surface"
+          >
+            Sign-in
+          </Link>}
         </nav>
       </div>
     </header>
-  );
-}
-
-function NavLink({ href, label }: { href: string; label: string }) {
-  return (
-    <Link
-      href={href}
-      className="state-layer rounded-full px-4 h-9 inline-flex items-center text-label-lg text-on-surface"
-    >
-      {label}
-    </Link>
   );
 }
 
@@ -123,7 +119,7 @@ function AccountMenu({ session }: { session: SessionInfo }) {
 function Footer() {
   return (
     <footer className="border-t border-outline-variant mt-20">
-      <div className="mx-auto max-w-6xl px-6 py-8 text-body-md text-on-surface-muted flex flex-wrap gap-x-8 gap-y-4 justify-between">
+      <div className="mx-auto max-w-5xl px-6 py-8 text-body-md text-on-surface-muted flex flex-wrap gap-x-8 gap-y-4 justify-between">
         <p className="max-w-2xl">
           Strukturell basierend auf dem{" "}
           <a className="text-primary underline" href="https://www.stifterverband.org/medien/future-skills-2030" target="_blank" rel="noopener noreferrer">
