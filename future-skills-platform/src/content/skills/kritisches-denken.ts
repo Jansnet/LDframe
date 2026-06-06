@@ -19,6 +19,7 @@ export const kritischesDenken: Skill = {
   stifterverbandId: "FSF-2030-FOUND-CRIT",
   version: "1.0.0",
   authors: ["Skill Hacker Editorial"],
+  status: "published",
 
   definition: {
     de: "Behauptungen, Argumente und Annahmen aktiv prüfen — Evidenz, Logik und Perspektive einbeziehen, statt automatisch zuzustimmen oder zu widersprechen.",

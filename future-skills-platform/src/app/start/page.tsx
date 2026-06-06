@@ -169,9 +169,6 @@ function SuggestionsView({ suggestions }: { suggestions: Suggestion[] }) {
               <Link href={`/skills/${s.skillSlug}`}>
                 <Button variant="filled" size="sm">Mit diesem Skill starten</Button>
               </Link>
-              <Link href={`/skills/${s.skillSlug}/discover`}>
-                <Button variant="text" size="sm">Erst tiefer schauen</Button>
-              </Link>
             </div>
           </Card>
         ))}

@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/Card";
 import {
   atlasByCategory,
   authoredSlugs,
+  publishedSlugs,
   CATEGORY_META,
   CATEGORY_ORDER,
 } from "@/content/skill-atlas";
@@ -13,15 +14,17 @@ import {
  * Atlas / Skill-Map — the home view.
  *
  * Five category panels, the 30 Future Skills 2030 grouped by category.
- * Authored skills are active chips that link through to the skill page;
- * unauthored skills appear as faded "kommt"-chips so the full atlas is
- * visible even before all 30 modules exist.
+ * Every skill is clickable: published skills (3 currently) link to a full
+ * skill page; stub skills show the L1-L4 anchors and a "Übungen folgen"
+ * notice. Skills marked as stubs are tagged here as „Anker da" so the
+ * difference is visible.
  */
 export default function HomePage() {
   const grouped = atlasByCategory();
   const authored = authoredSlugs();
+  const published = publishedSlugs();
 
-  const totalAuthored = authored.size;
+  const totalPublished = published.size;
   const totalSkills = CATEGORY_ORDER.reduce((sum, c) => sum + grouped[c].length, 0);
 
   return (
@@ -44,7 +47,7 @@ export default function HomePage() {
             Erst die Tour sehen
           </Link>
           <Chip tone="neutral" className="ml-auto text-label-sm">
-            {totalAuthored} von {totalSkills} ausgearbeitet
+            {totalPublished} von {totalSkills} voll ausgearbeitet · {authored.size - published.size} mit Anker
           </Chip>
         </div>
       </section>
@@ -53,35 +56,33 @@ export default function HomePage() {
         {CATEGORY_ORDER.map((cat) => {
           const meta = CATEGORY_META[cat];
           const skills = grouped[cat];
-          const inCatAuthored = skills.filter((s) => authored.has(s.slug)).length;
+          const inCatPublished = skills.filter((s) => published.has(s.slug)).length;
           return (
             <Card key={cat} variant="filled" className="flex flex-col gap-3">
               <div className="flex items-baseline justify-between gap-2">
                 <h2 className="font-serif text-title-lg text-on-surface">{meta.label}</h2>
-                <Chip tone={meta.tone}>{inCatAuthored}/{skills.length}</Chip>
+                <Chip tone={meta.tone}>{inCatPublished}/{skills.length} voll</Chip>
               </div>
               <p className="text-body-md text-on-surface-muted">{meta.short}</p>
               <ul className="flex flex-wrap gap-1.5 pt-1">
                 {skills.map((s) => {
-                  const isAuthored = authored.has(s.slug);
+                  const isPublished = published.has(s.slug);
                   return (
                     <li key={s.slug}>
-                      {isAuthored ? (
-                        <Link
-                          href={`/skills/${s.slug}`}
-                          className="state-layer inline-flex items-center rounded-full border border-outline-variant bg-surface px-3 h-8 text-label-md text-on-surface hover:border-primary"
-                        >
-                          {s.name}
-                        </Link>
-                      ) : (
-                        <span
-                          className="inline-flex items-center gap-1.5 rounded-full border border-dashed border-outline-variant px-3 h-8 text-label-md text-on-surface-muted/70"
-                          title="Modul wird ergänzt"
-                        >
-                          {s.name}
-                          <span className="font-mono text-label-sm text-primary/70">bald</span>
-                        </span>
-                      )}
+                      <Link
+                        href={`/skills/${s.slug}`}
+                        className={`state-layer inline-flex items-center gap-1.5 rounded-full border px-3 h-8 text-label-md hover:border-primary ${
+                          isPublished
+                            ? "border-outline-variant bg-surface text-on-surface"
+                            : "border-dashed border-outline-variant bg-transparent text-on-surface-muted"
+                        }`}
+                        title={isPublished ? undefined : "Anker vorhanden, Übungen folgen"}
+                      >
+                        {s.name}
+                        {!isPublished && (
+                          <span className="font-mono text-label-sm text-primary/70">Anker</span>
+                        )}
+                      </Link>
                     </li>
                   );
                 })}

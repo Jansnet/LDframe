@@ -3,7 +3,10 @@ import type { ReactNode } from "react";
 import { cookies } from "next/headers";
 import { parseSessionCookie, SESSION_COOKIE } from "@/lib/auth";
 import { prisma } from "@/lib/db";
-import { Sidebar } from "./Sidebar";
+import { Sidebar, SidebarToggle } from "./Sidebar";
+import { CoachPane } from "@/components/coach/CoachPane";
+import { listSkills } from "@/content/registry";
+import { t } from "@/lib/i18n";
 
 /**
  * AppShell — async server component so the nav reflects the session.
@@ -14,6 +17,7 @@ import { Sidebar } from "./Sidebar";
  */
 export async function AppShell({ children }: { children: ReactNode }) {
   const session = await loadSession();
+  const coachableSkills = listSkills().map((s) => ({ slug: s.slug, name: t(s.name) }));
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
       <Sidebar role={session.role} />
@@ -22,6 +26,7 @@ export async function AppShell({ children }: { children: ReactNode }) {
         <main className="flex-1 mx-auto w-full max-w-5xl px-6 py-10">{children}</main>
         <Footer />
       </div>
+      {session.loggedIn && <CoachPane skills={coachableSkills} />}
     </div>
   );
 }
@@ -59,14 +64,16 @@ function TopBar({ session }: { session: SessionInfo }) {
   return (
     <header className="sticky top-0 z-40 bg-surface/80 backdrop-blur border-b border-outline-variant">
       <div className="mx-auto max-w-5xl px-6 h-14 flex items-center justify-between gap-4">
-        {/* Mobile: show logo here since sidebar is hidden. Desktop: empty space for future breadcrumbs. */}
-        <Link
-          href="/"
-          className="md:hidden font-serif text-title-lg text-on-surface tracking-tight"
-        >
-          Skill Hacker
-          <span className="ml-2 font-mono text-label-sm text-primary">v0.1</span>
-        </Link>
+        {/* Mobile: hamburger + compact logo since sidebar is hidden. Desktop: empty space for future breadcrumbs. */}
+        <div className="md:hidden flex items-center gap-2">
+          <SidebarToggle />
+          <Link
+            href="/"
+            className="font-serif text-title-lg text-on-surface tracking-tight"
+          >
+            Skill Hacker
+          </Link>
+        </div>
         <div className="hidden md:block" />
         <nav className="flex items-center gap-1">
           {session.loggedIn ? <AccountMenu session={session} /> : <Link

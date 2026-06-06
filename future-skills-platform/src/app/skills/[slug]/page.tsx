@@ -109,18 +109,32 @@ export default async function SkillPage({ params }: { params: Promise<{ slug: st
         </div>
       </section>
 
-      {/* Exercises */}
-      <section>
-        <div className="flex items-baseline justify-between mb-4">
-          <h2 className="font-serif text-headline-md text-on-surface">Exploration & Application — Übungen</h2>
-          <span className="text-label-lg text-on-surface-muted">{skill.exercises.length} Übungen</span>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {skill.exercises.map((ex) => (
-            <ExerciseCard key={ex.id} exercise={ex} />
-          ))}
-        </div>
-      </section>
+      {/* Exercises — only when authored. Stub skills surface anchors only. */}
+      {skill.exercises.length > 0 && (
+        <section>
+          <div className="flex items-baseline justify-between mb-4">
+            <h2 className="font-serif text-headline-md text-on-surface">Exploration & Application — Übungen</h2>
+            <span className="text-label-lg text-on-surface-muted">{skill.exercises.length} Übungen</span>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {skill.exercises.map((ex) => (
+              <ExerciseCard key={ex.id} exercise={ex} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {skill.status === "stub" && (
+        <section className="rounded-lg border border-dashed border-outline-variant p-6 max-w-3xl">
+          <h2 className="font-serif text-title-lg text-on-surface mb-2">Übungen in Vorbereitung</h2>
+          <p className="text-body-md text-on-surface">
+            Anker, Definition und Coach für diesen Skill sind aus der Recherche fertig — Übungen,
+            Analogien und ausführliche Foundation-Module werden Skill für Skill ergänzt. Bis
+            dahin kannst du dich oben positionieren und mit dem Coach (rechts unten) konkret
+            an einer Situation arbeiten.
+          </p>
+        </section>
+      )}
 
       {/* Integration: Checklists + Habits */}
       {(skill.checklists.length > 0 || skill.habits.length > 0) && (
@@ -165,18 +179,20 @@ export default async function SkillPage({ params }: { params: Promise<{ slug: st
         </section>
       )}
 
-      <section className="bg-primary-container rounded-lg p-6 flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h3 className="font-serif text-title-lg text-primary-on-container mb-1">Bereit, mit diesem Skill zu starten?</h3>
-          <p className="text-body-md text-primary-on-container/80">
-            Formuliere zuerst deine Identity Statement — was du in 4 Wochen über dich sagen willst.
-            Der AI-Coach kennt den Satz und nutzt ihn in jeder Reflexion.
-          </p>
-        </div>
-        <a href={`/skills/${skill.slug}/start-cycle`}>
-          <Button variant="filled">Zyklus starten</Button>
-        </a>
-      </section>
+      {skill.status !== "stub" && (
+        <section className="bg-primary-container rounded-lg p-6 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h3 className="font-serif text-title-lg text-primary-on-container mb-1">Bereit, mit diesem Skill zu starten?</h3>
+            <p className="text-body-md text-primary-on-container/80">
+              Formuliere zuerst deine Identity Statement — was du in 4 Wochen über dich sagen willst.
+              Der AI-Coach kennt den Satz und nutzt ihn in jeder Reflexion.
+            </p>
+          </div>
+          <a href={`/skills/${skill.slug}/start-cycle`}>
+            <Button variant="filled">Zyklus starten</Button>
+          </a>
+        </section>
+      )}
     </div>
   );
 }

@@ -27,11 +27,11 @@ const STOPS = [
   },
   {
     no: "02",
-    title: "Discovery — 4 Levels, kein Quiz.",
+    title: "Selbstpositionierung — 4 Levels, kein Quiz.",
     bullet: "Wo stehst du gerade, ehrlich?",
-    body: "Jeder Skill hat eine eigene Discovery-Ansicht mit vier Stufen — von „hab davon gehört" bis „kann es anderen beibringen". Du wählst die Stufe, die sich gerade ehrlich anfühlt. Du kannst dich jederzeit umpositionieren.",
-    cta: { label: "Skill ansehen", href: "/skills/kritisches-denken/discover" },
-    alt: { label: "Blinde Flecken", href: "/blind-spots" },
+    body: "Jeder Skill hat L1–L4-Anker mit konkretem „beobachtbar von außen“ und „innerer Marker“ je Level. Du wählst die Stufe, die sich gerade ehrlich anfühlt — und kannst dich jederzeit umpositionieren.",
+    cta: { label: "Skill ansehen", href: "/skills/kritisches-denken" },
+    alt: { label: "Zum Atlas", href: "/" },
   },
   {
     no: "03",
@@ -44,9 +44,9 @@ const STOPS = [
   {
     no: "04",
     title: "Reflektieren — strukturiert, mit echtem Output.",
-    bullet: "Artefakte, Fallrunden, Manager-Loop.",
-    body: "Jede Übung produziert ein Artefakt — kein „done" ohne. Bei härteren Situationen: kollegiale Fallberatung in 6 Phasen, solo oder mit Peers. Wenn deine Führungskraft mitziehen soll: 90-Sek-Mail aus echten Daten.",
-    cta: { label: "Fallrunde anschauen", href: "/case-clinic" },
+    bullet: "Artefakte, Circles, Fallrunden, Manager-Loop.",
+    body: "Jede Übung produziert ein Artefakt — kein „done“ ohne. Ein Learning Circle hält über das Quartal die Disziplin. Bei härteren Einzelfällen: kollegiale Fallberatung in 6 Phasen. Wenn deine Führungskraft mitziehen soll: 90-Sek-Mail aus echten Daten.",
+    cta: { label: "Learning Circle anschauen", href: "/circles" },
     alt: { label: "Manager-Loop", href: "/manager-loop" },
   },
 ];

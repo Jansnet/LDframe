@@ -14,6 +14,7 @@ export const aiLiteracy: Skill = {
   stifterverbandId: "FSF-2030-DIG-AI",
   version: "1.0.0",
   authors: ["Skill Hacker Editorial"],
+  status: "published",
 
   definition: {
     de: "KI-Tools so einsetzen, dass Output prüfbar bleibt, Daten geschützt sind und jederzeit klar ist, wann ein Mensch im Loop sein muss.",

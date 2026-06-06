@@ -96,7 +96,12 @@ export function atlasByCategory(): Record<SkillCategory, AtlasEntry[]> {
   return grouped;
 }
 
-/** Slugs of skills that have an authored content module. */
+/** Slugs of skills with any content module — stub or published. */
 export function authoredSlugs(): Set<string> {
   return new Set(listSkills().map((s) => s.slug));
+}
+
+/** Slugs of fully published skills (exercises + foundations + coach persona). */
+export function publishedSlugs(): Set<string> {
+  return new Set(listSkills().filter((s) => s.status === "published").map((s) => s.slug));
 }

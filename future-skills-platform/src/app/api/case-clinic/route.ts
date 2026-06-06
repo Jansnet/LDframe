@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { PHASE_ORDER, nextPhase, type CasePhase } from "@/lib/case-clinic";
 import { awardBadgeIfFirst } from "@/lib/gentle-gamification";
@@ -96,9 +97,9 @@ export async function POST(req: NextRequest) {
       where: { id: clinicId },
       data: {
         phase: next,
-        notes: notes
+        notes: (notes
           ? { ...((clinic.notes as object | null) ?? {}), [clinic.phase]: notes }
-          : clinic.notes ?? undefined,
+          : clinic.notes ?? undefined) as Prisma.InputJsonValue | undefined,
         endedAt: isFinal ? new Date() : null,
       },
     });

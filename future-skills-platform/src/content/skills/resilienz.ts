@@ -16,6 +16,7 @@ export const resilienz: Skill = {
   stifterverbandId: "FSF-2030-TRANS-RES",
   version: "1.0.0",
   authors: ["Skill Hacker Editorial"],
+  status: "published",
 
   definition: {
     de: "Belastung wahrnehmen, regulieren und verarbeiten, sodass Handlungsfähigkeit und Wohlbefinden erhalten bleiben — und mit der Zeit sogar wachsen.",

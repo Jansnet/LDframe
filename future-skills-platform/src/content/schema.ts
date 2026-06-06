@@ -163,11 +163,16 @@ export const Skill = z.object({
   levelAnchors: z.array(LevelAnchor).length(4).optional(),
 
   foundation: z.array(FoundationModule).min(1),
-  exercises: z.array(Exercise).min(10),       // plan mandates at least 10
+  exercises: z.array(Exercise).default([]),       // published skills should provide ≥10; validateSkillCompleteness enforces it
   checklists: z.array(Checklist).default([]),
   habits: z.array(HabitTemplate).default([]),
 
   coach: CoachProfile,
+
+  // Stubs have anchors + definition + 1 analogy + 1 foundation, but no exercises
+  // and a placeholder coach. The atlas shows them as authored; the skill page
+  // surfaces the L1-L4 positioning. Published skills meet validateSkillCompleteness.
+  status: z.enum(["stub", "published"]).default("published"),
 
   // Publication metadata — non-blocking but useful for governance.
   version: z.string().default("1.0.0"),
@@ -176,7 +181,7 @@ export const Skill = z.object({
 });
 export type Skill = z.infer<typeof Skill>;
 
-// Helper for exercise mix validation.
+// Helper for exercise mix validation. Skip silently for stubs.
 export function validateExerciseMix(exercises: Exercise[]): string[] {
   const issues: string[] = [];
   const byLength = new Set(exercises.map((e) => e.length));
@@ -186,5 +191,15 @@ export function validateExerciseMix(exercises: Exercise[]): string[] {
   if (byLength.size < 3) issues.push("Use at least 3 different length categories.");
   if (byFormat.size < 4) issues.push("Use at least 4 different exercise formats.");
   if (!byPhase.has("application")) issues.push("At least one exercise must be phase=application.");
+  return issues;
+}
+
+// Stricter check used when promoting a stub to published status. Run this
+// via scripts/validate-content.ts before publishing changes.
+export function validateSkillCompleteness(skill: Skill): string[] {
+  const issues: string[] = [];
+  if (skill.status !== "published") return issues;
+  if (skill.exercises.length < 10) issues.push(`${skill.slug}: published skills need ≥10 exercises (has ${skill.exercises.length}).`);
+  issues.push(...validateExerciseMix(skill.exercises));
   return issues;
 }
