@@ -3,11 +3,11 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import type { Route } from "next";
 
 interface NavItem {
-  href: string;
+  href: Route;
   label: string;
-  comingSoon?: boolean;
   adminOnly?: boolean;
 }
 
@@ -143,9 +143,6 @@ export function Sidebar({ role }: { role?: string }) {
                           }`}
                         >
                           <span>{item.label}</span>
-                          {item.comingSoon && (
-                            <span className="font-mono text-label-sm text-primary">bald</span>
-                          )}
                         </Link>
                       </li>
                     );

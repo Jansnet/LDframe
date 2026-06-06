@@ -46,9 +46,6 @@ export default async function CirclesPage() {
           <Link href="/circles/new">
             <Button variant="filled">Neuen Circle starten</Button>
           </Link>
-          <Link href="/docs" className="text-body-md text-on-surface-muted">
-            <span className="underline">Protokoll-Vorlage (30 Min)</span>
-          </Link>
         </div>
       </header>
 

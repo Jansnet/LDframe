@@ -78,14 +78,14 @@ export function LogMeetingForm({ circleId, members, myUserId: _myUserId }: Props
           userId: c.userId,
           ifClause: c.ifClause.trim(),
           thenClause: c.thenClause.trim(),
-          dueBy: new Date(c.dueBy).toISOString(),
+          dueBy: c.dueBy,    // YYYY-MM-DD; server parses as noon UTC
         }));
 
       const res = await fetch(`/api/circles/${circleId}/meetings`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          scheduledAt: new Date(scheduledAt).toISOString(),
+          scheduledAt,         // YYYY-MM-DD; server parses as noon UTC
           focusMemberId: focusMember?.memberId,
           focusUserId: focusMember?.userId,
           keyQuestion: keyQuestion.trim() || undefined,

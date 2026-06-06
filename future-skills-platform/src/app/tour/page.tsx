@@ -1,7 +1,17 @@
 import Link from "next/link";
+import type { Route } from "next";
 import { Card, CardTitle, CardBody } from "@/components/ui/Card";
 import { Chip } from "@/components/ui/Chip";
 import { Button } from "@/components/ui/Button";
+
+interface Stop {
+  no: string;
+  title: string;
+  bullet: string;
+  body: string;
+  cta: { label: string; href: Route };
+  alt: { label: string; href: Route };
+}
 
 /**
  * /tour — onboarding walkthrough for new pilot users.
@@ -16,7 +26,7 @@ import { Button } from "@/components/ui/Button";
  * to the real surface, so the tour ends with the user actually using the
  * platform, not consuming marketing copy.
  */
-const STOPS = [
+const STOPS: Stop[] = [
   {
     no: "01",
     title: "Anfangen — ohne lange Diagnose.",
@@ -30,7 +40,7 @@ const STOPS = [
     title: "Selbstpositionierung — 4 Levels, kein Quiz.",
     bullet: "Wo stehst du gerade, ehrlich?",
     body: "Jeder Skill hat L1–L4-Anker mit konkretem „beobachtbar von außen“ und „innerer Marker“ je Level. Du wählst die Stufe, die sich gerade ehrlich anfühlt — und kannst dich jederzeit umpositionieren.",
-    cta: { label: "Skill ansehen", href: "/skills/kritisches-denken" },
+    cta: { label: "Skill ansehen", href: "/skills/kritisches-denken" as Route },
     alt: { label: "Zum Atlas", href: "/" },
   },
   {
@@ -38,7 +48,7 @@ const STOPS = [
     title: "Zyklus — Identity statt Skill-Description.",
     bullet: "„In 4 Wochen sage ich über mich …“",
     body: "Empirisch der stärkere Anker: Du formulierst einen Identity-Satz, kein To-Do. Mit der Wahl wird automatisch dein Plan generiert — ein bewusster Mix aus Mikro- und Embedded-Übungen, plus Reflexionsslots. Kein zweiter Schritt.",
-    cta: { label: "Zyklus formulieren", href: "/skills/kritisches-denken/start-cycle" },
+    cta: { label: "Zyklus formulieren", href: "/skills/kritisches-denken/start-cycle" as Route },
     alt: { label: "Mein aktueller Plan", href: "/plan" },
   },
   {

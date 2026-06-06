@@ -42,6 +42,15 @@ export async function POST(req: NextRequest) {
   if (!skill) {
     return NextResponse.json({ error: "skill_not_found" }, { status: 404 });
   }
+  if (skill.status === "stub") {
+    return NextResponse.json(
+      {
+        error: "skill_not_ready",
+        detail: "Für diesen Skill liegen die Anker vor, aber die Übungen werden noch geschrieben. Du kannst dich positionieren und den Coach nutzen, einen Zyklus starten geht noch nicht.",
+      },
+      { status: 409 },
+    );
+  }
 
   const planItems = generatePlan({ skill, weeks, hasCohort, hasManager });
   const startedAt = new Date();
